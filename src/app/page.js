@@ -1,11 +1,12 @@
+"use client";
 import React, { useState } from "react";
-import "./App.css";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
-const App = () => {
+const Page = () => {
   const [activeTab, setActiveTab] = useState("sweet");
   const [currentBanner, setCurrentBanner] = useState(0);
-  const [activePage, setActivePage] = useState("home"); // untuk navigasi
+  const [activePage, setActivePage] = useState("home"); 
 
   const banners = [
     { img: "banner.png" },
@@ -76,7 +77,7 @@ const App = () => {
             {products.map((item, i) => (
               <div key={i} className="card">
                 <img src={item.img} alt={item.name} />
-                <p className="product-name">{item.name}</p>
+                <Link href="/view"><p className="product-name">{item.name}</p></Link>
                 <p className="price">{item.price}</p>
               </div>
             ))}
@@ -117,4 +118,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Page;
