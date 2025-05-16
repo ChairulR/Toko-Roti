@@ -1,5 +1,6 @@
 import {PrismaClient}  from "@prisma/client";
 
+const globalForPrisma = global;
 
 export const prisma = new PrismaClient();
 

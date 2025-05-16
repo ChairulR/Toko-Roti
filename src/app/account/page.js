@@ -1,8 +1,11 @@
 import React from 'react'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../lib/auth'
 
-function page() {
+async function page() {
+  const session = await getServerSession(authOptions)
   return (
-    <div>page</div>
+JSON.stringify(session, null, 2) 
   )
 }
 

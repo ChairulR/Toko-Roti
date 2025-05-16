@@ -1,19 +1,14 @@
-
-
 import bcrypt from "bcrypt";
-import { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import axios from "axios";
-import { API } from "./Api";
 import { prisma } from "./prisma";
-
-
 
 export const authOptions = {
   session: {
     strategy: "jwt",
   },
+  
   providers: [
+
     Credentials({
       credentials: {
         email: {
@@ -26,23 +21,21 @@ export const authOptions = {
           type: "password",
         },
       },
+
       async authorize(credentials) {
         if (!credentials?.email || !credentials.password) return null;
 
-        const res = prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where:{
                 email: credentials.email
             }
         })
+      
 
-        if(!res) {
-            console.log("User not found");
+        if(!user) {
             return null;
         }
 
-        const user = users.find(
-          (user) => user.email === credentials.email
-        );
 
         if (!user) return null;
 
@@ -50,6 +43,8 @@ export const authOptions = {
           credentials.password,
           user.password
         );
+      
+        console.log(isPasswordValid)
         if (!isPasswordValid) return null;
 
         return {
