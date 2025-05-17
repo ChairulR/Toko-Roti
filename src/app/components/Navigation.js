@@ -7,7 +7,21 @@ import Link from "next/link";
 function Navigation() {
   const pathname = usePathname();
   const activePage = pathname.split("/").pop();
-  console.log(activePage);
+
+
+  
+/**
+ * Navigation component renders a bottom navigation bar with links to
+ * Home, History, and Account pages. 
+ * 
+ * Highlights the active page button based on the current URL path.
+ * 
+ * this component uses Next.js's usePathname hook to determine the current page.
+ * this component will be import to the layout.js file
+ * @component
+ * @returns {JSX.Element} Bottom navigation bar
+ * @author wignn
+ */
 
   return (
     <div className="bottom-nav">

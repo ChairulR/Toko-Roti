@@ -1,10 +1,10 @@
 import React from "react";
-import LoginForm from "@/app/components/Login";
+import RegisterForm from "@/app/components/RegisterForm";
 
 function page() {
   return (
     <div className="justify-center items-center flex">
-      <LoginForm />
+      <RegisterForm />
     </div>
   )
 }

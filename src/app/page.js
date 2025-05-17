@@ -2,15 +2,31 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import {useSearchParams } from "next/navigation";
+import {products as allProducts } from "./lib/moc";
+import Search from "./components/Home/Search";
+import Tab from "./components/Home/Tab";
+import Banner from "./components/Home/Banner";
 
-import { banners, products as allProducts } from "./lib/moc";
+/**
+ * Main page component of the bakery store.
+ *
+ * This page displays a welcome message, search bar, promotional banner,
+ * product tabs (sweet, savory, etc.), and dynamically filtered product cards
+ * based on the selected flavor from the query parameter.
+ *
+ * If the "history" tab is selected, it displays a list of past orders instead.
+ *
+ * Components like Search, Tab, and Banner are modularized in the components/Home folder.
+ *
+ * @component
+ * @returns {JSX.Element} Rendered homepage content
+ * @author wign
+ */
+
 
 const Page = () => {
-  const [currentBanner, setCurrentBanner] = useState(0);
   const searchParams = useSearchParams();
-  const router = useRouter();
-
   const activePage = searchParams.get("flavor") || "sweet";
   const [product, setProduct] = useState([]);
 
@@ -19,17 +35,13 @@ const Page = () => {
     setProduct(filtered);
   }, [activePage]);
 
-  const handleTabClick = (flavor) => {
-    router.push(`/?flavor=${flavor}`);
-  };
-
   const orderHistory = [
     { name: "Roti Sosis Mayo", date: "25 Apr 2025", status: "Selesai" },
     { name: "Roti Bluder Keju", date: "23 Apr 2025", status: "Selesai" },
   ];
 
   return (
-    <div className="container">
+    <div className="container-home">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -39,40 +51,13 @@ const Page = () => {
       </motion.div>
 
       {/* Search Bar */}
-      <div className="search-bar">
-        <input type="text" placeholder="Mau order apa hari ini?" />
-        <button className="search-icon">🔍</button>
-      </div>
+      <Search />
 
       {/* Banner */}
-      <div className="banner" onClick={() => setCurrentBanner((currentBanner + 1) % banners.length)}>
-        <img src={banners[currentBanner].img} alt="Promo" />
-        <div className="banner-text">
-          <h2>{banners[currentBanner].title}</h2>
-          <p className="edition">{banners[currentBanner].subtitle}</p>
-        </div>
-        <div className="dots">
-          {banners.map((_, i) => (
-            <span key={i} className={i === currentBanner ? "dot active" : "dot"} />
-          ))}
-        </div>
-      </div>
+      <Banner/>
 
       {/* Tabs */}
-      <div className="tabs">
-        <button
-          className={`tab ${activePage === "sweet" ? "active" : ""}`}
-          onClick={() => handleTabClick("sweet")}
-        >
-          Sweet
-        </button>
-        <button
-          className={`tab ${activePage === "savory" ? "active" : ""}`}
-          onClick={() => handleTabClick("savory")}
-        >
-          Savory
-        </button>
-      </div>
+      <Tab activePage={activePage} />
 
       {/* Content */}
       {activePage === "history" ? (
