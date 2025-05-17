@@ -4,6 +4,19 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { resgiter } from "../lib/action";
 
+
+/**
+ * RegisterForm component handles user registration.
+ * It manages form inputs for name, email, and password,
+ * shows error and success messages, and handles loading state.
+ * 
+ * On successful registration, it redirects the user to the homepage.
+ * 
+ * @component
+ * @author wignn
+ * @returns {JSX.Element} Registration form UI
+ */
+
 export default function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

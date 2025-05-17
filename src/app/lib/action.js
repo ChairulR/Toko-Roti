@@ -3,52 +3,51 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import { prisma } from "./prisma";
 
+/**
+  * This module contains server-side actions for user registration and product retrieval.
+  * It includes:
+  * - User registration with validation
+  * - User retrieval by ID
+  * - Product retrieval by search query and flavor
+  * @module actions 
+  * @author wign
+  */
 
-//zod for validation 
+// Zod schema for validating register input
 const registerSchema = z.object({
-  name: z
-    .string()
-    .min(3, { message: "Name must be at least 3 characters long" }),
+  name: z.string().min(3, { message: "Name must be at least 3 characters long" }),
   email: z.string().email({ message: "Invalid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters long" }),
+  password: z.string().min(8, { message: "Password must be at least 8 characters long" }),
 });
-/*
-user server is declared this file is server component for server action
-this file is used for server action like add to chart, login, register, etc
-*/
 
 /**
- * Server action untuk register user
- * @param {FormData} formdata - data dari form register (client)
+ * Server action to register a new user.
+ *
+ * @async
+ * @function
+ * @param {Object} formdata - The user registration data from client.
+ * @param {string} formdata.name - User's full name.
+ * @param {string} formdata.email - User's email address.
+ * @param {string} formdata.password - User's plain text password.
+ * @returns {Promise<Object>} Result object with success status and message or error details.
  */
-
 export const resgiter = async (formdata) => {
   const result = registerSchema.safeParse(formdata);
 
-  //validation zod
   if (!result.success) {
     return {
       success: false,
-      message: data.error.flatten().fieldErrors,
+      message: result.error.flatten().fieldErrors,
     };
   }
-  try {
-    //desructuring data for get password
-    const { password, ...data } = result.data;
 
-    //and password will hash using bcrypt
+  try {
+    const { password, ...data } = result.data;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    //check if user already exists
-    const isExist = await prisma.user.count({
-      where: {
-        email: data.email,
-      },
-    });
+    // Check if user already exists
+    const isExist = await prisma.user.count({ where: { email: data.email } });
 
-    //if user already exists, return error
     if (isExist > 0) {
       return {
         success: false,
@@ -56,7 +55,7 @@ export const resgiter = async (formdata) => {
       };
     }
 
-    //store user to database
+    // Create new user record in database
     const user = await prisma.user.create({
       data: {
         ...data,
@@ -64,8 +63,6 @@ export const resgiter = async (formdata) => {
       },
     });
 
-    //check if user created successfully
-    //if user not created, return error
     if (!user) {
       return {
         success: false,
@@ -73,16 +70,81 @@ export const resgiter = async (formdata) => {
       };
     }
 
-    //if use created successfully, return success
     return {
       success: true,
       message: "User created",
     };
   } catch (error) {
-    console.log(error);
     return {
       success: false,
       message: "Something went wrong",
     };
+  }
+};
+
+/**
+ * Retrieves a user by their unique ID.
+ *
+ * @async
+ * @function
+ * @param {number|string} id - The ID of the user to retrieve.
+ * @returns {Promise<Object|null>} User data object if found, otherwise null.
+ * @throws Will throw an error if database query fails.
+ */
+
+export const getUserById = async (id) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+    if (!user) {
+      return null;
+    }
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+  } catch (error) {
+    throw new Error("Something went wrong");
+  }
+};
+
+/**
+ * Retrieves products filtered by search query and flavor.
+ *
+ * @async
+ * @function
+ * @param {string} [query] - Search string to match product names.
+ * @param {string} [flavor] - Optional flavor filter.
+ * @returns {Promise<Array>} List of matching products.
+ * @throws Will throw an error if database query fails.
+ */
+
+export const getProductByQuery = async (query, flavor) => {
+  try {
+    const where = {};
+
+    if (flavor) {
+      where.flavor = flavor;
+    }
+
+    if (query) {
+      where.name = {
+        contains: query,
+        mode: "insensitive",
+      };
+    }
+
+    const products = await prisma.product.findMany({ where });
+
+    return products;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Something went wrong");
   }
 };

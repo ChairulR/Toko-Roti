@@ -1,12 +1,13 @@
-import React from 'react'
 import { getServerSession } from 'next-auth'
+import React from 'react'
 import { authOptions } from '../lib/auth'
+import ProfilePage from '../components/AccountPage'
+
 
 async function page() {
-  const session = await getServerSession(authOptions)
-  return (
-JSON.stringify(session, null, 2) 
-  )
+  const session = await getServerSession(authOptions) 
+  
+  return <ProfilePage user={session.user} />
 }
 
 export default page

@@ -4,6 +4,21 @@ import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
+
+/**
+ * LoginForm component for user login.
+ *
+ * This component handles user login functionality, including:
+ * - form submission
+ * - error handling
+ * - success messages
+ *
+ * It uses NextAuth for authentication.
+ *
+ * @component
+ * @author wign
+ */
+
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,6 +77,11 @@ export default function LoginForm() {
           {error && (
             <div className="bg-red-50 text-red-500 p-3 rounded-lg text-sm">
               {error}
+            </div>
+          )}
+          {success && (
+            <div className="bg-green-50 text-green-500 p-3 rounded-lg text-sm">
+              {success}
             </div>
           )}
 
