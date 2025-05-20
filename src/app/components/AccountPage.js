@@ -1,4 +1,6 @@
-"use client";
+
+"use client"
+
 
 import { motion } from "framer-motion";
 import { signOut } from "next-auth/react";
@@ -22,23 +24,46 @@ import { formatDateToDMY } from "../lib/utils";
  */
 
 
+import { motion } from "framer-motion"
+import { signOut } from "next-auth/react"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import { getUserById } from "@/app/lib/action"
+import { formatDateToDMY } from "@/app/lib/utils"
+import { useRouter } from "next/navigation"
+
 export default function ProfilePage({ user }) {
-  const [profile, setProfile] = useState("");
-  const router = useRouter();
+
+  const router = useRouter()
+  const [profile, setProfile] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
+
   useEffect(() => {
     const fetchProfile = async () => {
-      const res = await getUserById(user.id);
-      if (res) {
-        setProfile(res);
+      setIsLoading(true)
+      try {
+        const res = await getUserById(user.id)
+        if (res) {
+          setProfile(res)
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error)
+      } finally {
+        setIsLoading(false)
       }
-    };
-    fetchProfile();
-  }, [user.id]);
+    }
+
+    fetchProfile()
+  }, [user.id])
 
   const handleLogout = async () => {
-    await signOut({ redirect: false });
-    router.push("/login");
-  };
+    await signOut({ redirect: false })
+    router.push("/login")
+  }
+
+  if (isLoading) {
+    return <ProfileSkeleton />
+  }
 
   return (
     <div className="container min-h-screen flex flex-col pb-20">
@@ -66,9 +91,7 @@ export default function ProfilePage({ user }) {
               <path d="m15 18-6-6 6-6" />
             </svg>
           </Link>
-          <h1 className="text-xl font-bold flex-1 text-center pr-8">
-            Profil Saya
-          </h1>
+          <h1 className="text-xl font-bold flex-1 text-center pr-8">Profil Saya</h1>
         </div>
       </motion.div>
 
@@ -79,14 +102,10 @@ export default function ProfilePage({ user }) {
         className="flex flex-col items-center py-6"
       >
         <div className="w-24 h-24 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center mb-3">
-          <span className="text-3xl font-bold text-gray-500">
-            {profile.name}
-          </span>
+          <span className="text-3xl font-bold text-gray-500">{profile.name?.charAt(0)}</span>
         </div>
         <h2 className="text-xl font-bold">{profile.name}</h2>
-        <p className="text-gray-500 text-sm">
-          Member sejak {formatDateToDMY(profile.createdAt)}
-        </p>
+        <p className="text-gray-500 text-sm">Member sejak {formatDateToDMY(profile.createdAt)}</p>
       </motion.div>
 
       {/* User Information */}
@@ -97,9 +116,7 @@ export default function ProfilePage({ user }) {
         className="p-4"
       >
         <div className="bg-gray-50 rounded-lg p-4 mb-4">
-          <h3 className="text-sm font-medium text-gray-500 mb-3">
-            Informasi Akun
-          </h3>
+          <h3 className="text-sm font-medium text-gray-500 mb-3">Informasi Akun</h3>
 
           <div className="space-y-3">
             <div>
@@ -119,9 +136,6 @@ export default function ProfilePage({ user }) {
           </div>
         </div>
 
-        {/* Settings Options */}
-        {/* <AccountSetting/> */}
-
         {/* Logout Button */}
         <button
           onClick={handleLogout}
@@ -130,8 +144,8 @@ export default function ProfilePage({ user }) {
           Keluar
         </button>
       </motion.div>
-
-      {/* Bottom Navigation */}
     </div>
-  );
+  )
 }
+
+import ProfileSkeleton from "./skeleton/Profile-skeleton"
