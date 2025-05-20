@@ -142,17 +142,17 @@ export default function RegisterForm() {
             disabled={isLoading}
             className="mt-4 bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors"
           >
-            {isLoading ? "Memproses..." : "Masuk"}
+            {isLoading ? "Memproses..." : "Daftar"}
           </button>
 
           <div className="text-center mt-4">
             <p className="text-sm text-gray-500">
-              Belum punya akun?{" "}
+              Sudah punya akun?{" "}
               <Link
-                href="/register"
+                href="/login"
                 className="text-black font-medium hover:underline"
               >
-                Daftar
+                Masuk
               </Link>
             </p>
           </div>

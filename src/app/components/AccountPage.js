@@ -5,6 +5,7 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getUserById } from "../lib/action";
+import { useRouter } from "next/navigation";
 import { formatDateToDMY } from "../lib/utils";
 // import AccountSetting from "./AccountSetting"
 
@@ -23,6 +24,7 @@ import { formatDateToDMY } from "../lib/utils";
 
 export default function ProfilePage({ user }) {
   const [profile, setProfile] = useState("");
+  const router = useRouter();
   useEffect(() => {
     const fetchProfile = async () => {
       const res = await getUserById(user.id);
