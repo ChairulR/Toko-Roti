@@ -39,7 +39,7 @@ export default function RegisterForm() {
         setError(res.error);
         setSuccess("");
       } else {
-        setSuccess("Login berhasil!");
+        setSuccess("Register berhasil!");
         setError("");
         window.location.href = "/";
       }
