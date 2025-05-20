@@ -1,4 +1,28 @@
+
 "use client"
+
+
+import { motion } from "framer-motion";
+import { signOut } from "next-auth/react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getUserById } from "../lib/action";
+import { useRouter } from "next/navigation";
+import { formatDateToDMY } from "../lib/utils";
+// import AccountSetting from "./AccountSetting"
+
+/**
+ * ProfilePage component to display user's profile and account information.
+ *
+ * Fetches and displays user data from the server, shows account details,
+ * and provides a logout option using NextAuth.
+ *
+ * @component
+ * @param {{ user: { id: string, name: string, email: string } }} props - The current logged-in user.
+ * @returns {JSX.Element}
+ * @author wignn
+ */
+
 
 import { motion } from "framer-motion"
 import { signOut } from "next-auth/react"
@@ -9,6 +33,7 @@ import { formatDateToDMY } from "@/app/lib/utils"
 import { useRouter } from "next/navigation"
 
 export default function ProfilePage({ user }) {
+
   const router = useRouter()
   const [profile, setProfile] = useState("")
   const [isLoading, setIsLoading] = useState(true)
