@@ -7,6 +7,7 @@ import {products as allProducts } from "./lib/moc";
 import Search from "./components/Home/Search";
 import Tab from "./components/Home/Tab";
 import Banner from "./components/Home/Banner";
+import { getProductByQuery } from "@/app/lib/action";
 
 /**
  * Main page component of the bakery store.
