@@ -154,7 +154,8 @@ export default function RegisterForm() {
                 href="/login"
                 className="text-black font-medium hover:underline"
               >
-                Login
+
+                Masuk
               </Link>
             </p>
           </div>
