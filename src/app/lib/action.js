@@ -31,12 +31,13 @@ const registerSchema = z.object({
  * @param {string} formdata.password - User's plain text password.
  * @returns {Promise<Object>} Result object with success status and message or error details.
  */
-export const resgiter = async (formdata) => {
+export const register = async (formdata) => {
   const result = registerSchema.safeParse(formdata);
 
   if (!result.success) {
     return {
       success: false,
+      errorType: "VALIDATION_ERROR",
       message: result.error.flatten().fieldErrors,
     };
   }
@@ -45,17 +46,16 @@ export const resgiter = async (formdata) => {
     const { password, ...data } = result.data;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Check if user already exists
     const isExist = await prisma.user.count({ where: { email: data.email } });
 
     if (isExist > 0) {
       return {
         success: false,
-        message: "User already exists",
+        errorType: "DUPLICATE_USER",
+        message: "Email sudah digunakan",
       };
     }
 
-    // Create new user record in database
     const user = await prisma.user.create({
       data: {
         ...data,
@@ -63,21 +63,16 @@ export const resgiter = async (formdata) => {
       },
     });
 
-    if (!user) {
-      return {
-        success: false,
-        message: "User not created",
-      };
-    }
-
     return {
       success: true,
-      message: "User created",
+      message: "User berhasil dibuat",
     };
   } catch (error) {
+    console.error("Server error saat register:", error);
     return {
       success: false,
-      message: "Something went wrong",
+      errorType: "SERVER_ERROR",
+      message: "Terjadi kesalahan server. Silakan coba lagi.",
     };
   }
 };

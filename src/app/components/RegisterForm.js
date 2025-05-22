@@ -2,16 +2,15 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { resgiter } from "../lib/action";
-
+import { register } from "../lib/action";
 
 /**
  * RegisterForm component handles user registration.
  * It manages form inputs for name, email, and password,
  * shows error and success messages, and handles loading state.
- * 
+ *
  * On successful registration, it redirects the user to the homepage.
- * 
+ *
  * @component
  * @author wignn
  * @returns {JSX.Element} Registration form UI
@@ -25,32 +24,38 @@ export default function RegisterForm() {
   const [name, setName] = useState("");
   const [isLoading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const res = await resgiter({
-        name,
-        email,
-        password,
-      });
+    setError("");
+    setSuccess("");
 
-      if (res.success) {
-        setError(res.error);
-        setSuccess("");
+    try {
+      const res = await register({ name, email, password });
+
+      if (!res.success) {
+        if (res.errorType === "VALIDATION_ERROR") {
+          const messages = Object.values(res.message).flat().join(", ");
+          setError(messages);
+        } else {
+          setError(res.message || "Terjadi kesalahan.");
+        }
       } else {
+        setSuccess(res.message || "Pendaftaran berhasil!");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
         setSuccess("Register berhasil!");
         setError("");
         window.location.href = "/";
       }
-    } catch (error) {
-        console.log("Error:", error);
-        setError("Terjadi kesalahan, silakan coba lagi.");
-    }finally {
-        setLoading(false);
+    } catch (err) {
+      console.error("Error client:", err);
+      setError("Terjadi kesalahan, silakan coba lagi.");
+    } finally {
+      setLoading(false);
     }
   };
-
   return (
     <div className="container min-h-screen flex flex-col">
       <motion.div
@@ -70,7 +75,7 @@ export default function RegisterForm() {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="flex-1"
       >
-        <form onSubmit={handleLogin} className="flex flex-col gap-4 p-4">
+        <form onSubmit={handleRegister} className="flex flex-col gap-4 p-4">
           {error && (
             <div className="bg-red-50 text-red-500 p-3 rounded-lg text-sm">
               {error}
@@ -152,6 +157,7 @@ export default function RegisterForm() {
                 href="/login"
                 className="text-black font-medium hover:underline"
               >
+
                 Masuk
               </Link>
             </p>
@@ -159,7 +165,6 @@ export default function RegisterForm() {
         </form>
       </motion.div>
 
-      {/* Alternative Login Options */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

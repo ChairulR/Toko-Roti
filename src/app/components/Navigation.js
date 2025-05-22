@@ -7,8 +7,6 @@ import Link from "next/link";
 function Navigation() {
   const pathname = usePathname();
   const activePage = pathname.split("/").pop();
-
-
   
 /**
  * Navigation component renders a bottom navigation bar with links to
