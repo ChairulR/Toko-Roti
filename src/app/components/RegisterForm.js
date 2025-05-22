@@ -80,7 +80,7 @@ export default function RegisterForm() {
           )}
 
           {success && (
-            <div className="bg-red-50 text-red-500 p-3 rounded-lg text-sm">
+            <div className="bg-red-50 text-green-500 p-3 rounded-lg text-sm">
               {success}
             </div>
           )}

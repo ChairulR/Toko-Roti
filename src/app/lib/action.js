@@ -56,7 +56,7 @@ export const register = async (formdata) => {
       };
     }
 
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         ...data,
         password: hashedPassword,

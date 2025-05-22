@@ -7,7 +7,7 @@ import {products as allProducts } from "./lib/moc";
 import Search from "./components/Home/Search";
 import Tab from "./components/Home/Tab";
 import Banner from "./components/Home/Banner";
-import { getProductByQuery } from "@/app/lib/action";
+import { getProductByQuery } from "./lib/action";
 
 /**
  * Main page component of the bakery store.
@@ -25,14 +25,15 @@ import { getProductByQuery } from "@/app/lib/action";
  * @author wign
  */
 
-
 const Page = () => {
   const searchParams = useSearchParams();
   const activePage = searchParams.get("flavor") || "sweet";
   const [product, setProduct] = useState([]);
 
+
   useEffect(() => {
     const filtered = allProducts.filter((item) => item.flavor === activePage);
+    
     setProduct(filtered);
   }, [activePage]);
 
