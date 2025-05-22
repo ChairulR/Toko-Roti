@@ -143,3 +143,14 @@ export const getProductByQuery = async (query, flavor) => {
     throw new Error("Something went wrong");
   }
 };
+
+
+export const getAllProducts = async () => {
+  try {
+    const products = await prisma.product.findMany();
+    return products;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Something went wrong");
+  }
+}
