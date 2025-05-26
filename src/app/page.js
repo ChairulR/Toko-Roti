@@ -1,13 +1,15 @@
 "use client";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import {useSearchParams } from "next/navigation";
-import {products as allProducts } from "./lib/moc";
 import Search from "./components/Home/Search";
 import Tab from "./components/Home/Tab";
 import Banner from "./components/Home/Banner";
+import ProductDetailPopup from "./components/ProductDetailPopup";
 import { getProductByQuery } from "@/app/lib/action";
+import Link from "next/link";
+
 
 /**
  * Main page component of the bakery store.
@@ -25,22 +27,27 @@ import { getProductByQuery } from "@/app/lib/action";
  * @author wign
  */
 
-
-const Page = () => {
+export default function Page() {
   const searchParams = useSearchParams();
+  const [products, setProducts] = useState([]);
+  const [banners, setBanners] = useState([]);
   const activePage = searchParams.get("flavor") || "sweet";
   const [product, setProduct] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const activeTab = searchParams.get("flavor") || "sweet";
+  
 
   useEffect(() => {
-    const filtered = allProducts.filter((item) => item.flavor === activePage);
-    setProduct(filtered);
-  }, [activePage]);
+    axios.get("/api/products")
+      .then(response => setProducts(response.data))
+      .catch(error => console.error("Error fetching products:", error));
 
-  const orderHistory = [
-    { name: "Roti Sosis Mayo", date: "25 Apr 2025", status: "Selesai" },
-    { name: "Roti Bluder Keju", date: "23 Apr 2025", status: "Selesai" },
-  ];
+    axios.get("/api/banners")
+      .then(response => setBanners(response.data))
+      .catch(error => console.error("Error fetching banners:", error));
+  }, []);
 
+  const filteredProducts = products.filter((item) => item.flavor === activeTab);
   return (
     <div className="container-home">
       <motion.div
@@ -55,10 +62,14 @@ const Page = () => {
       <Search />
 
       {/* Banner */}
-      <Banner/>
+      <div className="banner">
+        {banners.map((banner) => (
+          <img key={banner.id} src={`/images/${banner.image}`} alt={banner.title} />
+        ))}
+      </div>
 
       {/* Tabs */}
-      <Tab activePage={activePage} />
+      <Tab activePage={activeTab} />
 
       {/* Content */}
       {activePage === "history" ? (
@@ -75,20 +86,26 @@ const Page = () => {
           </div>
         </>
       ) : (
-        <div className="cards">
-          {product.map((item, i) => (
-            <div key={i} className="card">
-              <img src={item.img} alt={item.name} />
-              <Link href="/view">
-                <p className="product-name">{item.name}</p>
+          <div className="cards">
+            {filteredProducts.map((item) => (
+              <Link key={item.id} href={`/view/${item.id}`}>
+                <div key={item.id} className="card">
+                  <img src={`/images/${item.image}`} alt={item.name} />
+                  <Link href={`/view/${item.id}`}>
+                    <p className="product-name">{item.name}</p>
+                  </Link>
+                    <p className="price">Rp{item.price}</p>
+                </div>
               </Link>
-              <p className="price">{item.price}</p>
-            </div>
-          ))}
-        </div>
+              ))}
+          </div>
+      )}
+      {selectedProduct && (
+        <ProductDetailPopup 
+        productId={selectedProduct} 
+        onClose={() => setSelectedProduct(null)} 
+        />
       )}
     </div>
   );
-};
-
-export default Page;
+}
