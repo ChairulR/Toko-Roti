@@ -6,9 +6,8 @@ export const authOptions = {
   session: {
     strategy: "jwt",
   },
-  
-  providers: [
 
+  providers: [
     Credentials({
       credentials: {
         email: {
@@ -30,12 +29,10 @@ export const authOptions = {
                 email: credentials.email
             }
         })
-      
-
+    
         if(!user) {
             return null;
         }
-
 
         if (!user) return null;
 

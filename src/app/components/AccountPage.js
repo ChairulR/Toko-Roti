@@ -1,4 +1,3 @@
-
 "use client"
 
 
@@ -23,14 +22,6 @@ import { formatDateToDMY } from "../lib/utils";
  * @author wignn
  */
 
-
-import { motion } from "framer-motion"
-import { signOut } from "next-auth/react"
-import Link from "next/link"
-import { useEffect, useState } from "react"
-import { getUserById } from "@/app/lib/action"
-import { formatDateToDMY } from "@/app/lib/utils"
-import { useRouter } from "next/navigation"
 
 export default function ProfilePage({ user }) {
 

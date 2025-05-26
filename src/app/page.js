@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import {useSearchParams } from "next/navigation";
-import {products as allProducts } from "./lib/moc";
+import { useSearchParams } from "next/navigation";
+import { products as allProducts } from "./lib/moc";
 import Search from "./components/Home/Search";
 import Tab from "./components/Home/Tab";
 import Banner from "./components/Home/Banner";
-import { getProductByQuery } from "@/app/lib/action";
+import { getAllProducts, getProductByQuery } from "./lib/action";
 
 /**
  * Main page component of the bakery store.
@@ -25,15 +25,21 @@ import { getProductByQuery } from "@/app/lib/action";
  * @author wign
  */
 
-
 const Page = () => {
   const searchParams = useSearchParams();
   const activePage = searchParams.get("flavor") || "sweet";
   const [product, setProduct] = useState([]);
 
   useEffect(() => {
-    const filtered = allProducts.filter((item) => item.flavor === activePage);
-    setProduct(filtered);
+    const fetchProducts = async () => {
+      const p = await getAllProducts()
+      console.log(p)
+      const filtered = p.filter(
+        (item) => item.flavor === activePage);
+      setProduct(filtered);
+    };
+    fetchProducts();
+
   }, [activePage]);
 
   const orderHistory = [
@@ -55,7 +61,7 @@ const Page = () => {
       <Search />
 
       {/* Banner */}
-      <Banner/>
+      <Banner />
 
       {/* Tabs */}
       <Tab activePage={activePage} />
@@ -78,7 +84,7 @@ const Page = () => {
         <div className="cards">
           {product.map((item, i) => (
             <div key={i} className="card">
-              <img src={item.img} alt={item.name} />
+              <img src={item.image} alt={item.name} />
               <Link href="/view">
                 <p className="product-name">{item.name}</p>
               </Link>
