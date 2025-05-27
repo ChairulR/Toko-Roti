@@ -30,17 +30,33 @@ const Page = () => {
   const activePage = searchParams.get("flavor") || "sweet";
   const [product, setProduct] = useState([]);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const p = await getAllProducts()
-      console.log(p)
-      const filtered = p.filter(
-        (item) => item.flavor === activePage);
-      setProduct(filtered);
-    };
-    fetchProducts();
+useEffect(() => {
+  const fetchProducts = async () => {
+    const allProducts = await getAllProducts();
+    const filteredByFlavor = allProducts.filter(
+      (item) => item.flavor === activePage
+    );
 
-  }, [activePage]);
+    const query = searchParams.get("query");
+    if (query) {
+      const lowerQuery = query.toLowerCase();
+      const filteredSearch = filteredByFlavor.filter((item) =>
+        item.name.toLowerCase().includes(lowerQuery)
+      );
+r
+      if (filteredSearch.length > 0) {
+        setProduct(filteredSearch);
+      } else {
+        setProduct(filteredByFlavor);
+      }
+    } else {
+      setProduct(filteredByFlavor);
+    }
+  };
+
+  fetchProducts();
+}, [activePage, searchParams]);
+
 
   const orderHistory = [
     { name: "Roti Sosis Mayo", date: "25 Apr 2025", status: "Selesai" },
