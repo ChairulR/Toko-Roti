@@ -55,7 +55,9 @@ export default function Page() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1>Selamat Datang di Toko Roti!</h1>
+      <div className="Selamatdtg">
+        Selamat Datang di Toko Roti Mayra D'Light!
+      </div>
       </motion.div>
 
       {/* Search Bar */}
