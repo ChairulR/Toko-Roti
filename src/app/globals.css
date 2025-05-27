@@ -23,6 +23,10 @@ body {
   align-items: center;
 }
 
+.selamatdtg {
+  font-size: 200px;
+}
+
 .search-bar input {
   flex: 1;
   padding: 10px 14px;
@@ -355,6 +359,192 @@ body {
 
 .comment {
   margin-top: 5px;
+}
+
+.checkout-popup {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkout-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  width: 350px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.checkout-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.checkout-product, .checkout-price, .checkout-total {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.checkout-product span,
+.checkout-price span,
+.checkout-total span {
+  font-weight: bold;
+  color: black;
+}
+
+.qty-input {
+  width: 50px;
+  height: 40px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  border: 2px solid #ff9800;
+  border-radius: 6px;
+  outline: none;
+}
+
+.confirm-button, .close-button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-top: 15px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.qty-button {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+}
+
+.qty-button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+.qty-input {
+  width: 50px;
+  height: 40px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  border: 2px solid black;
+  border-radius: 6px;
+  outline: none;
+}
+
+.quantity-controlsplus .qty-button {
+  background: black; 
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 18px;
+}
+
+.quantity-controlsplus .qty-button:hover {
+  background: #cc0000;
+}
+
+.quantity-controlsmin .qty-button {
+  background: white;
+  color: black;
+  border: 2px solid black;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 18px;
+}
+
+.quantity-controlsmin .qty-button:hover {
+  background: #f0f0f0; 
+}
+
+.qty-buttonplus {
+  background: #e60000;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 18px;
+}
+
+.qty-buttonmin {
+  background: white;
+  color: black;
+  border: solid 3px black;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 18px;
+}
+
+
+.qty-button:hover {
+  background: #e68900;
+}
+
+.confirm-button {
+  margin-top: 10px;
+  padding: 10px;
+  background: #e60000;
+
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.confirm-button, .close-button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-top: 15px;
+}
+
+.confirm-button {
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.confirm-button:hover {
+  background: #e68900;
+}
+
+.close-button {
+  background: white;
+  color: black;
+  border: 2px solid black;
+}
+
+.close-button:hover {
+  background: #f0f0f0;
 }
 
 @media screen and (max-width: 768px) {

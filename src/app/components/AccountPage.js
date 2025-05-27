@@ -20,6 +20,8 @@ import { formatDateToDMY } from "../lib/utils";
  * @returns {JSX.Element}
  * @author wignn
  */
+
+
 export default function ProfilePage({ user }) {
 
   const router = useRouter()
