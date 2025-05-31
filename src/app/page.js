@@ -30,15 +30,24 @@ import Card from "./components/Home/Card";
 export default function Page() {
   const searchParams = useSearchParams();
   const [banners, setBanners] = useState([]);
-  const activePage = searchParams.get("flavor") || "sweet";
   const [product, setProduct] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const activeTab = searchParams.get("flavor") || "sweet";
   
 
+  const fetchProduct = async () => {
+    try {
+      const query = searchParams.get("flavor");
+      const response = await getProductByQuery(query, activeTab);
+      setProduct(response);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
   useEffect(() => {
     fetchProduct();
-  }, [query, activePage]);
+  }, [searchParams, activeTab]);
 
   
   return (
@@ -71,7 +80,7 @@ export default function Page() {
       <Tab activePage={activeTab} />
 
       {/* Content */}
-      <Card activePage={activePage} filteredProducts={product} />
+      <Card activePage={activeTab} filteredProducts={product} />
       {selectedProduct && (
         <ProductDetailPopup
           productId={selectedProduct}
