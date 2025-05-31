@@ -644,3 +644,7 @@ body {
   font-weight: bold;
   color: #888;
 }
+
+input[type="radio"] {
+  accent-color: black;
+}
