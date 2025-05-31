@@ -4,20 +4,24 @@ import bcrypt from "bcrypt";
 import { prisma } from "./prisma";
 
 /**
-  * This module contains server-side actions for user registration and product retrieval.
-  * It includes:
-  * - User registration with validation
-  * - User retrieval by ID
-  * - Product retrieval by search query and flavor
-  * @module actions 
-  * @author wign
-  */
+ * This module contains server-side actions for user registration and product retrieval.
+ * It includes:
+ * - User registration with validation
+ * - User retrieval by ID
+ * - Product retrieval by search query and flavor
+ * @module actions
+ * @author wign
+ */
 
 // Zod schema for validating register input
 const registerSchema = z.object({
-  name: z.string().min(3, { message: "Name must be at least 3 characters long" }),
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters long" }),
   email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(8, { message: "Password must be at least 8 characters long" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long" }),
 });
 
 /**
@@ -137,20 +141,80 @@ export const getProductByQuery = async (query, flavor) => {
 
     const products = await prisma.product.findMany({ where });
 
-    return products;
+    return {
+      success: true,
+      data: products,
+    };
   } catch (error) {
     console.error(error);
     throw new Error("Something went wrong");
   }
 };
 
-
 export const getAllProducts = async () => {
   try {
     const products = await prisma.product.findMany();
-    return products;
+    return {
+      success: true,
+      data: products,
+    };
   } catch (error) {
     console.error(error);
     throw new Error("Something went wrong");
   }
-}
+};
+
+export const getProductById = async (id) => {
+  try {
+    const product = await prisma.product.findUnique({
+      where: {
+        id: Number(id),
+      },
+      include: {
+        comments: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!product) {
+      return {
+        success: false,
+        errorType: "NOT_FOUND",
+        message: "Product not found",
+      };
+    }
+
+    return {
+      success: true,
+      data: {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        image: product.image,
+        flavor: product.flavor,
+        comments: product.comments.map((comment) => ({
+          id: comment.id,
+          userId: comment.userId,
+          name: comment.user.name,
+          rate: comment.rate,
+          comment: comment.content,
+          createdAt: comment.createdAt,
+          updatedAt: comment.updatedAt,
+        })),
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    throw new Error("Something went wrong");
+  }
+};

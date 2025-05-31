@@ -28,7 +28,28 @@ model Product {
   name      String
   price     Int
   image     String
-  flavor    String  
+  flavor    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  comments  Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  productId Int
+  rate      Int
+  userId    Int
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Banner {
+  id        Int      @id @default(autoincrement())
+  name      String
+  image     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

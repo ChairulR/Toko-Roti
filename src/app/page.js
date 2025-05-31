@@ -7,7 +7,9 @@ import { products as allProducts } from "./lib/moc";
 import Search from "./components/Home/Search";
 import Tab from "./components/Home/Tab";
 import Banner from "./components/Home/Banner";
-import { getAllProducts, getProductByQuery } from "./lib/action";
+import ProductDetailPopup from "./components/ProductDetailPopup";
+import { getProductByQuery } from "@/app/lib/action";
+import Card from "./components/Home/Card";
 
 /**
  * Main page component of the bakery store.
@@ -27,42 +29,26 @@ import { getAllProducts, getProductByQuery } from "./lib/action";
 
 const Page = () => {
   const searchParams = useSearchParams();
-  const activePage = searchParams.get("flavor") || "sweet";
   const [product, setProduct] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const activeTab = searchParams.get("flavor") || "sweet";
+  
 
-useEffect(() => {
-  const fetchProducts = async () => {
-    const allProducts = await getAllProducts();
-    const filteredByFlavor = allProducts.filter(
-      (item) => item.flavor === activePage
-    );
-
-    const query = searchParams.get("query");
-    if (query) {
-      const lowerQuery = query.toLowerCase();
-      const filteredSearch = filteredByFlavor.filter((item) =>
-        item.name.toLowerCase().includes(lowerQuery)
-      );
-r
-      if (filteredSearch.length > 0) {
-        setProduct(filteredSearch);
-      } else {
-        setProduct(filteredByFlavor);
-      }
-    } else {
-      setProduct(filteredByFlavor);
+  const fetchProduct = async () => {
+    try {
+      const query = searchParams.get("query") || "";
+      const response = await getProductByQuery(query, activeTab);
+      setProduct(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
     }
   };
 
-  fetchProducts();
-}, [activePage, searchParams]);
+  useEffect(() => {
+    fetchProduct();
+  }, [searchParams, activeTab]);
 
-
-  const orderHistory = [
-    { name: "Roti Sosis Mayo", date: "25 Apr 2025", status: "Selesai" },
-    { name: "Roti Bluder Keju", date: "23 Apr 2025", status: "Selesai" },
-  ];
-
+  
   return (
     <div className="container-home">
       <motion.div
@@ -70,47 +56,30 @@ r
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1>Selamat Datang di Toko Roti!</h1>
+      <div className="Selamatdtg">
+        Selamat Datang di Toko Roti Mayra D'Light!
+      </div>
       </motion.div>
 
       {/* Search Bar */}
       <Search />
 
       {/* Banner */}
-      <Banner />
+      <Banner/>
 
       {/* Tabs */}
       <Tab activePage={activePage} />
 
       {/* Content */}
-      {activePage === "history" ? (
-        <>
-          <h2>Riwayat Pesanan</h2>
-          <div className="history-list">
-            {orderHistory.map((item, index) => (
-              <div key={index} className="history-item">
-                <p className="product-name">{item.name}</p>
-                <p className="date">{item.date}</p>
-                <p className="status">{item.status}</p>
-              </div>
-            ))}
-          </div>
-        </>
-      ) : (
-        <div className="cards">
-          {product.map((item, i) => (
-            <div key={i} className="card">
-              <img src={item.image} alt={item.name} />
-              <Link href="/view">
-                <p className="product-name">{item.name}</p>
-              </Link>
-              <p className="price">{item.price}</p>
-            </div>
-          ))}
-        </div>
+      <Card activePage={activeTab} filteredProducts={product} />
+
+      {selectedProduct && (
+        <ProductDetailPopup
+          productId={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
       )}
     </div>
   );
-};
+}
 
-export default Page;
