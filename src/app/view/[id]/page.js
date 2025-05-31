@@ -21,7 +21,7 @@ export default async function ProductDetailPage({ params }) {
       {/* Gambar Produk */}
       <div className="relative w-full aspect-[4/3]">
         <Image
-          src={`/images/${product.image}`}
+          src={/images/${product.image}}
           alt={product.name}
           fill
           className="object-cover"
