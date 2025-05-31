@@ -180,9 +180,13 @@ export const getProductById = async (id) => {
               },
             },
           },
+          orderBy: {
+            createdAt: "desc",
+          },
         },
       },
     });
+
     if (!product) {
       return {
         success: false,
@@ -190,6 +194,12 @@ export const getProductById = async (id) => {
         message: "Product not found",
       };
     }
+
+    // Hitung rata-rata rating
+    const ratingList = product.comments.map((c) => c.rate);
+    const averageRating = ratingList.length > 0
+      ? parseFloat((ratingList.reduce((sum, val) => sum + val, 0) / ratingList.length).toFixed(1))
+      : null;
 
     return {
       success: true,
@@ -200,21 +210,27 @@ export const getProductById = async (id) => {
         price: product.price,
         image: product.image,
         flavor: product.flavor,
+        averageRating,
+        reviewCount: ratingList.length,
         comments: product.comments.map((comment) => ({
           id: comment.id,
           userId: comment.userId,
-          name: comment.user.name,
+          userName: comment.user.name,
           rate: comment.rate,
-          comment: comment.content,
+          content: comment.content,
           createdAt: comment.createdAt,
-          updatedAt: comment.updatedAt,
         })),
         createdAt: product.createdAt,
         updatedAt: product.updatedAt,
       },
     };
   } catch (error) {
-    console.error(error);
-    throw new Error("Something went wrong");
+    console.error("getProductById error:", error);
+    return {
+      success: false,
+      errorType: "SERVER_ERROR",
+      message: "Internal Server Error",
+    };
   }
 };
+

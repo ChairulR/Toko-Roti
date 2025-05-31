@@ -1,144 +1,74 @@
-"use client";
-import { notFound, useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { getProductById } from "@/app/lib/action";
-import Loading from "@/app/components/loading";
+import Image from "next/image";
 
-export default function Page() {
-  const { id } = useParams();
-  const [showCheckout, setShowCheckout] = useState(false);
-  const [product, setProduct] = useState();
-  const [quantity, setQuantity] = useState(1);
-  const router = useRouter();
-  const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default async function ProductDetailPage({ params }) {
+  const { id } = params;
+  const result = await getProductById(id);
 
-  const fetchProduct = async () => {
-    setLoading(true);
-    try {
-      const r = await getProductById(id);
-      if (!r.success) {
-        notFound();
-      } else {
-        setProduct(r.data);
-        setReviews(r.data.comments || []);
-      }
-    } catch (error) {
-      console.error("Error fetching product:", error);
-      notFound();
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    fetchProduct();
-  }, []);
-
-  if (loading) {
-    return <Loading message="Loading product..."/>
+  if (!result.success) {
+    return <div className="text-center mt-10 text-red-500">Produk tidak ditemukan.</div>;
   }
 
-  const averageRating =
-    reviews.reduce((acc, review) => acc + review.rate, 0) /
-    (reviews.length || 1);
+  const product = result.data;
+  const totalPrice = product.price;
 
   return (
-    <div className="product-container">
-      <div className="product-image">
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Gambar produk (header image) */}
+      <div className="relative w-full aspect-[4/3]">
         <Image
           src={`/images/${product.image}`}
           alt={product.name}
-          width={400}
-          height={400}
+          fill
+          className="object-cover"
+          priority
         />
       </div>
-      <div className="product-info">
-        <h1>{product.name}</h1>
-        <p className="product-price">Rp{product.price}</p>
-        <p className="description">{product.description}</p>
-        <button className="buy-button" onClick={() => setShowCheckout(true)}>
-          Beli Sekarang
-        </button>
+
+      {/* Informasi produk */}
+      <div className="flex-1 p-4 overflow-y-auto">
+        <p className="text-sm text-gray-500">{product.flavor}</p>
+
+        <div className="flex justify-between items-center mt-1">
+          <h2 className="text-xl font-bold">{product.name}</h2>
+          <p className="font-bold text-lg">Rp{product.price.toLocaleString()}</p>
+        </div>
+
+        {/* Quantity */}
+        <div className="flex items-center gap-3 mt-3">
+          <button className="border px-3 py-1 rounded font-bold">-</button>
+          <span>1</span>
+          <button className="border px-3 py-1 rounded font-bold">+</button>
+        </div>
+
+        {/* Rating */}
+        <div className="flex items-center mt-3 text-sm text-gray-500">
+          <span className="text-yellow-500">★ 4.9 (23)</span>
+          <button className="ml-auto underline text-black text-sm">
+            Ratings and reviews
+          </button>
+        </div>
+
+        {/* Catatan */}
+        <div className="mt-5">
+          <label htmlFor="note" className="font-medium text-sm">Notes</label>
+          <textarea
+            id="note"
+            placeholder="Optional"
+            className="w-full mt-1 border rounded-lg p-3 text-sm min-h-[80px]"
+          />
+        </div>
       </div>
-      <div className="product-reviews">
-        <p className="overall-rating">
-          Rating:{" "}
-          <span>
-            {"⭐".repeat(Math.round(averageRating))} ({averageRating})  
-          </span>
-        </p>
-        {reviews.map((review) => (
-          console.log(review),
-          <div key={review.id} className="review-card">
-            <p className="user">
-              <strong>{review.name}</strong>
-            </p>
-            <p className="rating">{"⭐".repeat(review.rate)}</p>
-            <p className="comment">{review.comment}</p>
-          </div>
-        ))}
-        {showCheckout && (
-          <div className="checkout-popup">
-            <div className="checkout-content">
-              <h2 className="checkout-title">Checkout</h2>
-              <p className="checkout-product">
-                Produk: <span>{product.name}</span>
-              </p>
-              <p className="checkout-price">
-                Harga: <span>Rp{product.price}</span>
-              </p>
 
-              {/* Kontrol jumlah item */}
-              <div className="quantity-controls">
-                <div className="quantity-controlsmin">
-                  <button
-                    onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
-                    className="qty-button"
-                  >
-                    -
-                  </button>
-                </div>
-                <input
-                  type="number"
-                  className="qty-input"
-                  value={quantity}
-                  onChange={(e) =>
-                    setQuantity(Math.max(1, parseInt(e.target.value) || 1))
-                  }
-                />
-                <div className="quantity-controlsplus">
-                  <button
-                    onClick={() => setQuantity((prev) => prev + 1)}
-                    className="qty-button"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <p className="checkout-total">
-                <strong>
-                  Total: <span>Rp{product.price * quantity}</span>
-                </strong>
-              </p>
-
-              <button
-                onClick={() => router.push("/checkout")}
-                className="confirm-button"
-              >
-                Konfirmasi Pembayaran
-              </button>
-              <button
-                className="close-button"
-                onClick={() => setShowCheckout(false)}
-              >
-                Tutup
-              </button>
-            </div>
-          </div>
-        )}
+      {/* Footer */}
+      <div className="p-4 border-t">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-gray-600 text-sm">Total</span>
+          <span className="text-lg font-bold">Rp{totalPrice.toLocaleString()}</span>
+        </div>
+        <button className="w-full py-3 bg-black text-white rounded-lg font-semibold">
+          Add Order
+        </button>
       </div>
     </div>
   );
