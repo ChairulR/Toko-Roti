@@ -8,7 +8,6 @@ import Tab from "./components/Home/Tab";
 import Banner from "./components/Home/Banner";
 import ProductDetailPopup from "./components/ProductDetailPopup";
 import { getProductByQuery } from "@/app/lib/action";
-import Link from "next/link";
 import Card from "./components/Home/Card";
 
 /**

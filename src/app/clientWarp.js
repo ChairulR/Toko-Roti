@@ -8,7 +8,7 @@ const ClientWrapper = ({ children }) => {
   return (
     <SessionProvider>
       {children}
- 
+
     </SessionProvider>
   );
 };
