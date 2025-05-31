@@ -1,15 +1,13 @@
 "use client";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { products as allProducts } from "./lib/moc";
 import Search from "./components/Home/Search";
 import Tab from "./components/Home/Tab";
 import Banner from "./components/Home/Banner";
-import ProductDetailPopup from "./components/ProductDetailPopup";
-import { getProductByQuery } from "@/app/lib/action";
-import Link from "next/link";
-
+import { getAllProducts, getProductByQuery } from "./lib/action";
 
 /**
  * Main page component of the bakery store.
@@ -27,27 +25,44 @@ import Link from "next/link";
  * @author wign
  */
 
-export default function Page() {
+const Page = () => {
   const searchParams = useSearchParams();
-  const [products, setProducts] = useState([]);
-  const [banners, setBanners] = useState([]);
   const activePage = searchParams.get("flavor") || "sweet";
   const [product, setProduct] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const activeTab = searchParams.get("flavor") || "sweet";
-  
 
-  useEffect(() => {
-    axios.get("/api/products")
-      .then(response => setProducts(response.data))
-      .catch(error => console.error("Error fetching products:", error));
+useEffect(() => {
+  const fetchProducts = async () => {
+    const allProducts = await getAllProducts();
+    const filteredByFlavor = allProducts.filter(
+      (item) => item.flavor === activePage
+    );
 
-    axios.get("/api/banners")
-      .then(response => setBanners(response.data))
-      .catch(error => console.error("Error fetching banners:", error));
-  }, []);
+    const query = searchParams.get("query");
+    if (query) {
+      const lowerQuery = query.toLowerCase();
+      const filteredSearch = filteredByFlavor.filter((item) =>
+        item.name.toLowerCase().includes(lowerQuery)
+      );
+r
+      if (filteredSearch.length > 0) {
+        setProduct(filteredSearch);
+      } else {
+        setProduct(filteredByFlavor);
+      }
+    } else {
+      setProduct(filteredByFlavor);
+    }
+  };
 
-  const filteredProducts = products.filter((item) => item.flavor === activeTab);
+  fetchProducts();
+}, [activePage, searchParams]);
+
+
+  const orderHistory = [
+    { name: "Roti Sosis Mayo", date: "25 Apr 2025", status: "Selesai" },
+    { name: "Roti Bluder Keju", date: "23 Apr 2025", status: "Selesai" },
+  ];
+
   return (
     <div className="container-home">
       <motion.div
@@ -55,23 +70,17 @@ export default function Page() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-      <div className="Selamatdtg">
-        Selamat Datang di Toko Roti Mayra D'Light!
-      </div>
+        <h1>Selamat Datang di Toko Roti!</h1>
       </motion.div>
 
       {/* Search Bar */}
       <Search />
 
       {/* Banner */}
-      <div className="banner">
-        {banners.map((banner) => (
-          <img key={banner.id} src={`/images/${banner.image}`} alt={banner.title} />
-        ))}
-      </div>
+      <Banner />
 
       {/* Tabs */}
-      <Tab activePage={activeTab} />
+      <Tab activePage={activePage} />
 
       {/* Content */}
       {activePage === "history" ? (
@@ -88,26 +97,20 @@ export default function Page() {
           </div>
         </>
       ) : (
-          <div className="cards">
-            {filteredProducts.map((item) => (
-              <Link key={item.id} href={`/view/${item.id}`}>
-                <div key={item.id} className="card">
-                  <img src={`/images/${item.image}`} alt={item.name} />
-                  <Link href={`/view/${item.id}`}>
-                    <p className="product-name">{item.name}</p>
-                  </Link>
-                    <p className="price">Rp{item.price}</p>
-                </div>
+        <div className="cards">
+          {product.map((item, i) => (
+            <div key={i} className="card">
+              <img src={item.image} alt={item.name} />
+              <Link href="/view">
+                <p className="product-name">{item.name}</p>
               </Link>
-              ))}
-          </div>
-      )}
-      {selectedProduct && (
-        <ProductDetailPopup 
-        productId={selectedProduct} 
-        onClose={() => setSelectedProduct(null)} 
-        />
+              <p className="price">{item.price}</p>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
-}
+};
+
+export default Page;

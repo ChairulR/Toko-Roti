@@ -1,4 +1,6 @@
+
 "use client"
+
 
 import { motion } from "framer-motion";
 import { signOut } from "next-auth/react";
