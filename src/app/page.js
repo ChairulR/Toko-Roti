@@ -2,14 +2,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Search from "./components/Home/Search";
 import Tab from "./components/Home/Tab";
 import Banner from "./components/Home/Banner";
 import ProductDetailPopup from "./components/ProductDetailPopup";
 import { getProductByQuery } from "@/app/lib/action";
 import Link from "next/link";
-
+import Card from "./components/Home/Card";
 
 /**
  * Main page component of the bakery store.
@@ -29,29 +29,18 @@ import Link from "next/link";
 
 export default function Page() {
   const searchParams = useSearchParams();
-  const [products, setProducts] = useState([]);
   const [banners, setBanners] = useState([]);
   const activePage = searchParams.get("flavor") || "sweet";
   const [product, setProduct] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const activeTab = searchParams.get("flavor") || "sweet";
-  const orderHistory = [
-  { name: "Roti Tawar", date: "27 Mei 2025", status: "Selesai" },
-  { name: "Croissant", date: "25 Mei 2025", status: "Diproses" },
-];
   
 
   useEffect(() => {
-    axios.get("/api/products")
-      .then(response => setProducts(response.data))
-      .catch(error => console.error("Error fetching products:", error));
+    fetchProduct();
+  }, [query, activePage]);
 
-    axios.get("/api/banners")
-      .then(response => setBanners(response.data))
-      .catch(error => console.error("Error fetching banners:", error));
-  }, []);
-
-  const filteredProducts = products.filter((item) => item.flavor === activeTab);
+  
   return (
     <div className="container-home">
       <motion.div
@@ -59,8 +48,9 @@ export default function Page() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-      <h2><strong> Selamat Datang di Toko Roti Mayra D'Light!</strong></h2>
-
+      <div className="Selamatdtg">
+        Selamat Datang di Toko Roti Mayra D'Light!
+      </div>
       </motion.div>
 
       {/* Search Bar */}
@@ -69,7 +59,11 @@ export default function Page() {
       {/* Banner */}
       <div className="banner">
         {banners.map((banner) => (
-          <img key={banner.id} src={`/images/${banner.image}`} alt={banner.title} />
+          <img
+            key={banner.id}
+            src={`/images/${banner.image}`}
+            alt={banner.title}
+          />
         ))}
       </div>
 
@@ -77,38 +71,11 @@ export default function Page() {
       <Tab activePage={activeTab} />
 
       {/* Content */}
-      {activePage === "history" ? (
-        <>
-          <h2>Riwayat Pesanan</h2>
-          <div className="history-list">
-            {orderHistory.map((item, index) => (
-              <div key={index} className="history-item">
-                <p className="product-name">{item.name}</p>
-                <p className="date">{item.date}</p>
-                <p className="status">{item.status}</p>
-              </div>
-            ))}
-          </div>
-        </>
-      ) : (
-          <div className="cards">
-            {filteredProducts.map((item) => (
-              <Link key={item.id} href={`/view/${item.id}`}>
-                <div key={item.id} className="card">
-                  <img src={`/images/${item.image}`} alt={item.name} />
-                  <Link href={`/view/${item.id}`}>
-                    <p className="product-name">{item.name}</p>
-                  </Link>
-                    <p className="price">Rp{item.price}</p>
-                </div>
-              </Link>
-              ))}
-          </div>
-      )}
+      <Card activePage={activePage} filteredProducts={product} />
       {selectedProduct && (
-        <ProductDetailPopup 
-        productId={selectedProduct} 
-        onClose={() => setSelectedProduct(null)} 
+        <ProductDetailPopup
+          productId={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
         />
       )}
     </div>
