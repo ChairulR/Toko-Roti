@@ -1,20 +1,47 @@
+"use client";
+import Loading from "@/app/components/loading";
 import { getProductById } from "@/app/lib/action";
 import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default async function ProductDetailPage({ params }) {
-  const { id } = params;
-  const result = await getProductById(id);
+export default function ProductDetailPage() {
+  const [product, setProduct] = useState();
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [count, setCount] = useState(1);
+  const params = useParams();
+  const id = params.id;
+  const router = useRouter();
+  const [note, setNote] = useState("");
 
-  if (!result.success) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-red-500">
-        Produk tidak ditemukan.
-      </div>
-    );
+
+  const fetching = async () => {
+    setLoading(true);
+    try {
+      const result = await getProductById(id);
+      if (result.success) {
+        setProduct(result.data);
+        setTotalPrice(result.data.price);
+      }
+      setProduct(result.data);
+      setTotalPrice(result.data.price);
+    } catch (error) {
+      console.error("Error fetching product:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+const fecthOrder = async () =>{
+    router.push(`/checkout/${id}?quantity=${count}&note=${note}`);
+}
+  useEffect(() => {
+    fetching();
+  }, [id]);
+  if (loading) {
+    return <Loading message="Loading product" />;
   }
-
-  const product = result.data;
-  const totalPrice = product.price;
 
   return (
     <div className="min-h-screen bg-white">
@@ -34,14 +61,35 @@ export default async function ProductDetailPage({ params }) {
 
         <div className="flex justify-between items-center mt-1">
           <h2 className="text-xl font-bold">{product.name}</h2>
-          <p className="font-bold text-lg">Rp{product.price.toLocaleString()}</p>
+          <p className="font-bold text-lg">
+            Rp{product.price.toLocaleString()}
+          </p>
         </div>
 
         {/* Quantity */}
         <div className="flex items-center gap-3 mt-3">
-          <button className="border px-3 py-1 rounded font-bold">-</button>
-          <span>1</span>
-          <button className="border px-3 py-1 rounded font-bold">+</button>
+          <button
+            className="border px-3 py-1 rounded font-bold"
+            onClick={() => {
+              if (count > 1) {
+                setCount(count - 1);
+                setTotalPrice(product.price * (count - 1));
+              }
+            }}
+          >
+            -
+          </button>
+          <span>{count}</span>
+          <button
+            className="border px-3 py-1 rounded font-bold"
+            onClick={() => {
+              const newCount = count + 1;
+              setCount(newCount);
+              setTotalPrice(product.price * newCount);
+            }}
+          >
+            +
+          </button>
         </div>
 
         {/* Rating */}
@@ -70,8 +118,12 @@ export default async function ProductDetailPage({ params }) {
 
         {/* Notes */}
         <div className="mt-5">
-          <label htmlFor="note" className="font-medium text-sm">Notes</label>
+          <label htmlFor="note" className="font-medium text-sm">
+            Notes
+          </label>
           <textarea
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
             id="note"
             placeholder="Optional"
             className="w-full mt-1 border rounded-lg p-3 text-sm min-h-[80px]"
@@ -80,13 +132,18 @@ export default async function ProductDetailPage({ params }) {
       </div>
 
       {/* Tombol Add Order */}
-      <div className="bottom-4 left-4 right-4 z-50">
+      <div className="bottom-4 mb-12 left-4 right-4 z-50">
         <div className="bg-white rounded-lg shadow-lg p-4 flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <span className="text-gray-600 text-sm">Total</span>
-            <span className="text-lg font-bold">Rp{totalPrice.toLocaleString()}</span>
+            <span className="text-lg font-bold">
+              Rp{totalPrice.toLocaleString()}
+            </span>
           </div>
-          <button className="w-full py-3 bg-black text-white rounded-lg font-semibold">
+          <button className="w-full py-3 bg-black text-white rounded-lg font-semibold"
+            onClick={fecthOrder}
+
+         >
             Add Order
           </button>
         </div>
