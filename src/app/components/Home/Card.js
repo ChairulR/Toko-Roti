@@ -28,9 +28,7 @@ function Card({activePage, filteredProducts}) {
             <Link key={item.id} href={`/view/${item.id}`}>
               <div key={item.id} className="card">
                 <img src={`/images/${item.image}`} alt={item.name} />
-                <Link href={`/view/${item.id}`}>
                   <p className="product-name">{item.name}</p>
-                </Link>
                 <p className="price">Rp{item.price}</p>
               </div>
             </Link>
