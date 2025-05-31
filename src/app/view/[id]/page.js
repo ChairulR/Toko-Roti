@@ -154,7 +154,7 @@ export default function Page() {
       </div>
 
       {/* Bottom Section */}
-      <div className="bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 max-w-sm mx-auto">
+      <div className=" bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 max-w-sm mx-auto">
         <div className="flex items-center justify-between mb-4">
           <div>
             <span className="text-sm text-gray-600">Total</span>
