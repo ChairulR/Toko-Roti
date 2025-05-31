@@ -1,58 +1,66 @@
-"use client"
+"use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { signOut } from "next-auth/react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import axios from "axios";
 import { getUserById } from "../lib/action";
-import { useRouter } from "next/navigation";
 import { formatDateToDMY } from "../lib/utils";
-// import AccountSetting from "./AccountSetting"
-
-/**
- * ProfilePage component to display user's profile and account information.
- *
- * Fetches and displays user data from the server, shows account details,
- * and provides a logout option using NextAuth.
- *
- * @component
- * @param {{ user: { id: string, name: string, email: string } }} props - The current logged-in user.
- * @returns {JSX.Element}
- * @author wignn
- */
-
+import ProfileSkeleton from "./skeleton/Profile-skeleton";
 
 export default function ProfilePage({ user }) {
-
-  const router = useRouter()
-  const [profile, setProfile] = useState("")
-  const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter();
+  const [profile, setProfile] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [editMode, setEditMode] = useState(false);
+  const [updatedProfile, setUpdatedProfile] = useState({
+    name: "",
+    email: "",
+  });
 
   useEffect(() => {
     const fetchProfile = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const res = await getUserById(user.id)
+        const res = await getUserById(user.id);
         if (res) {
-          setProfile(res)
+          setProfile(res);
+          setUpdatedProfile({ name: res.name, email: res.email });
         }
       } catch (error) {
-        console.error("Error fetching profile:", error)
+        console.error("Error fetching profile:", error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchProfile()
-  }, [user.id])
+    fetchProfile();
+  }, [user.id]);
 
   const handleLogout = async () => {
-    await signOut({ redirect: false })
-    router.push("/login")
-  }
+    await signOut({ redirect: false });
+    router.push("/login");
+  };
+
+  const handleChange = (e) => {
+    setUpdatedProfile({ ...updatedProfile, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.put("/api/account", updatedProfile);
+      alert("Profil berhasil diperbarui!");
+      setProfile(updatedProfile);
+      setEditMode(false);
+    } catch (error) {
+      console.error("Gagal memperbarui profil:", error);
+    }
+  };
 
   if (isLoading) {
-    return <ProfileSkeleton />
+    return <ProfileSkeleton />;
   }
 
   return (
@@ -65,7 +73,7 @@ export default function ProfilePage({ user }) {
         className="py-4 border-b border-gray-100"
       >
         <div className="flex items-center">
-          <Link href="/" className="p-2">
+          <button onClick={() => router.push("/")} className="p-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -80,11 +88,12 @@ export default function ProfilePage({ user }) {
             >
               <path d="m15 18-6-6 6-6" />
             </svg>
-          </Link>
+          </button>
           <h1 className="text-xl font-bold flex-1 text-center pr-8">Profil Saya</h1>
         </div>
       </motion.div>
 
+      {/* Profile Picture & Info */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -108,22 +117,51 @@ export default function ProfilePage({ user }) {
         <div className="bg-gray-50 rounded-lg p-4 mb-4">
           <h3 className="text-sm font-medium text-gray-500 mb-3">Informasi Akun</h3>
 
-          <div className="space-y-3">
-            <div>
-              <p className="text-xs text-gray-500">ID Pengguna</p>
-              <p className="font-medium">{user.id}</p>
-            </div>
+          {editMode ? (
+            <form onSubmit={handleSubmit} className="edit-profile-form">
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs text-gray-500">Nama</p>
+                  <input
+                    type="text"
+                    name="name"
+                    value={updatedProfile.name}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                </div>
 
-            <div>
-              <p className="text-xs text-gray-500">Nama</p>
-              <p className="font-medium">{user.name}</p>
-            </div>
+                <div>
+                  <p className="text-xs text-gray-500">Email</p>
+                  <input
+                    type="email"
+                    name="email"
+                    value={updatedProfile.email}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                </div>
+              </div>
+              <div className="mt-4 flex gap-3">
+                <button type="submit" className="save-button">Simpan Perubahan</button>
+                <button type="button" onClick={() => setEditMode(false)} className="cancel-button">Batal</button>
+              </div>
+            </form>
+          ) : (
+            <div className="space-y-3">
+              <div>
+                <p className="text-xs text-gray-500">Nama</p>
+                <p className="font-medium">{profile.name}</p>
+              </div>
 
-            <div>
-              <p className="text-xs text-gray-500">Email</p>
-              <p className="font-medium">{user.email}</p>
+              <div>
+                <p className="text-xs text-gray-500">Email</p>
+                <p className="font-medium">{profile.email}</p>
+              </div>
+
+              <button onClick={() => setEditMode(true)} className="edit-button">Edit Profil</button>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Logout Button */}
@@ -135,7 +173,5 @@ export default function ProfilePage({ user }) {
         </button>
       </motion.div>
     </div>
-  )
+  );
 }
-
-import ProfileSkeleton from "./skeleton/Profile-skeleton"

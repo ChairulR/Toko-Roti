@@ -299,7 +299,7 @@ body {
   align-items: center; /* Pastikan elemen-elemen dalam .product-info terpusat */
   justify-content: center;
   gap: 10px; /* Berikan sedikit jarak antar elemen */
-  font-size: 25px;
+  font-size: 20px;
 }
 
 .product-price {
@@ -557,4 +557,90 @@ body {
     width: 300px;
     height: 300px;
   }
+}
+
+.payment-container {
+  padding: 40px;
+  text-align: center;
+}
+
+.payment-cart, .payment-confirm, .payment {
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.next-button, .confirm-button {
+  background: #e60000;
+  color: white;
+  padding: 12px 20px;
+  font-size: 17px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.next-button:hover, .confirm-payment-button:hover {
+  background: #e68900;
+}
+
+.back-button {
+  background: white;
+  color: black;
+  border: 2px solid black;
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.back-button:hover {
+  background: #f0f0f0;
+}
+
+.payment-method {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 2px solid #ff9800;
+  margin-top: 10px;
+}
+
+.history-container {
+  padding: 40px;
+  text-align: center;
+}
+
+.history-list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.history-item {
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.producthist-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.date, .status {
+  font-size: 16px;
+  color: #555;
+}
+
+.no-orders {
+  font-size: 18px;
+  font-weight: bold;
+  color: #888;
 }

@@ -35,6 +35,10 @@ export default function Page() {
   const [product, setProduct] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const activeTab = searchParams.get("flavor") || "sweet";
+  const orderHistory = [
+  { name: "Roti Tawar", date: "27 Mei 2025", status: "Selesai" },
+  { name: "Croissant", date: "25 Mei 2025", status: "Diproses" },
+];
   
 
   useEffect(() => {
@@ -55,9 +59,8 @@ export default function Page() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-      <div className="Selamatdtg">
-        Selamat Datang di Toko Roti Mayra D'Light!
-      </div>
+      <h2><strong> Selamat Datang di Toko Roti Mayra D'Light!</strong></h2>
+
       </motion.div>
 
       {/* Search Bar */}

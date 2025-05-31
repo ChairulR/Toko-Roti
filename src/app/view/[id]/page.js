@@ -4,12 +4,15 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 
 export default function Page() {
   const { id } = useParams();
   const [showCheckout, setShowCheckout] = useState(false);
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const router = useRouter();
   const [reviews, setReviews] = useState([
     { id: 1, user: "Inka", rating: 5, comment: "Roti ini lembut dan enak banget, suka deh" },
     { id: 2, user: "Syafira", rating: 4, comment: "Rasa manisnya pas, cocok untuk sarapan!" },
@@ -79,7 +82,9 @@ export default function Page() {
 
         <p className="checkout-total"><strong>Total: <span>Rp{product.price * quantity}</span></strong></p>
 
-        <button className="confirm-button">Konfirmasi Pembayaran</button>
+        <button onClick={() => router.push("/checkout")} className="confirm-button">
+           Konfirmasi Pembayaran
+        </button>
         <button className="close-button" onClick={() => setShowCheckout(false)}>Tutup</button>
         </div>
         </div>

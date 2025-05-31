@@ -19,7 +19,7 @@ const ProductDetailPopup = ({ productId, onClose }) => {
   return (
     <div className="popup-overlay">
       <div className="popup-content">
-        <button className="close-btn" onClick={onClose}>✖</button>
+        <button className="popupclose-btn" onClick={onClose}>✖</button>
         <Image src={product.image} alt={product.name} width={200} height={200} />
         <h2>{product.name}</h2>
         <p className="price">Rp{product.price}</p>

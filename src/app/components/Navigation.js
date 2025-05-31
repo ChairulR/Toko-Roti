@@ -3,9 +3,11 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 function Navigation() {
   const pathname = usePathname();
+  const router = useRouter();
   const activePage = pathname.split("/").pop();
   
 /**
@@ -32,6 +34,7 @@ function Navigation() {
         </button>
       </Link>
 
+    <Link href="/history">
       <button
         className={`nav-item ${activePage === "history" ? "active" : ""}`}
       >
@@ -40,6 +43,7 @@ function Navigation() {
         </span>
         <small>History</small>
       </button>
+    </Link>
 
       <Link href="/account">
         <button
