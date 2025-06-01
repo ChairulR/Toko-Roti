@@ -38,7 +38,7 @@ export default function RatingReviewPage({ product, userId }) {
         parseInt(rating),
         review,
       );
-      console.log("Response from createComment:", response);
+
 
       if (!response || response.status === false) {
         throw new Error(response.message || "Failed to submit review");
