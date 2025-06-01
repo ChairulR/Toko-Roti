@@ -1,6 +1,6 @@
 "use client";
+
 import Loading from "@/app/components/loading";
-import { getProductById } from "@/app/lib/action";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,22 +10,21 @@ export default function ProductDetailPage() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(1);
+  const [note, setNote] = useState("");
+
   const params = useParams();
   const id = params.id;
   const router = useRouter();
-  const [note, setNote] = useState("");
-
 
   const fetching = async () => {
     setLoading(true);
     try {
+      const { getProductById } = await import("@/app/lib/action");
       const result = await getProductById(id);
       if (result.success) {
         setProduct(result.data);
         setTotalPrice(result.data.price);
       }
-      setProduct(result.data);
-      setTotalPrice(result.data.price);
     } catch (error) {
       console.error("Error fetching product:", error);
     } finally {
@@ -33,13 +32,15 @@ export default function ProductDetailPage() {
     }
   };
 
-const fecthOrder = async () =>{
-    router.push(`/checkout/${id}?quantity=${count}&note=${note}`);
-}
+  const fetchOrder = () => {
+    const encodedNote = encodeURIComponent(note);
+    router.push(`/order/checkout?id=${id}&quantity=${count}&note=${encodedNote}`);
+  };
 
   useEffect(() => {
     fetching();
   }, [id]);
+
   if (loading) {
     return <Loading message="Loading product" />;
   }
@@ -62,9 +63,7 @@ const fecthOrder = async () =>{
 
         <div className="flex justify-between items-center mt-1">
           <h2 className="text-xl font-bold">{product.name}</h2>
-          <p className="font-bold text-lg">
-            Rp{product.price.toLocaleString()}
-          </p>
+          <p className="font-bold text-lg">Rp{product.price.toLocaleString()}</p>
         </div>
 
         {/* Quantity */}
@@ -73,8 +72,9 @@ const fecthOrder = async () =>{
             className="border px-3 py-1 rounded font-bold"
             onClick={() => {
               if (count > 1) {
-                setCount(count - 1);
-                setTotalPrice(product.price * (count - 1));
+                const newCount = count - 1;
+                setCount(newCount);
+                setTotalPrice(product.price * newCount);
               }
             }}
           >
@@ -108,8 +108,7 @@ const fecthOrder = async () =>{
               <div key={c.id} className="mb-3 border-b pb-2">
                 <p className="font-medium">{c.userName}</p>
                 <p className="text-yellow-500 text-sm">
-                  {"★".repeat(c.rate)}{" "}
-                  <span className="text-gray-500">({c.rate})</span>
+                  {"★".repeat(c.rate)} <span className="text-gray-500">({c.rate})</span>
                 </p>
                 <p className="text-sm text-gray-700">{c.content}</p>
               </div>
@@ -132,23 +131,23 @@ const fecthOrder = async () =>{
         </div>
       </div>
 
-      {/* Tombol Add Order */}
+    {/* Tombol Beli Sekarang */}
       <div className="bottom-4 mb-12 left-4 right-4 z-50">
         <div className="bg-white rounded-lg shadow-lg p-4 flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <span className="text-gray-600 text-sm">Total</span>
             <span className="text-lg font-bold">
               Rp{totalPrice.toLocaleString()}
-            </span>
-          </div>
-          <button className="w-full py-3 bg-black text-white rounded-lg font-semibold"
-            onClick={fecthOrder}
-
-         >
-            Add Order
-          </button>
+          </span>
         </div>
+        <button
+          className="checkout-btn"
+          onClick={fetchOrder}
+        >
+          Beli Sekarang
+        </button>
       </div>
+    </div>
     </div>
   );
 }
