@@ -1,8 +1,10 @@
 "use client"
 
+import { formatterCurrency } from "@/app/lib/utils"
 import { useState } from "react"
+import { createComment } from "../lib/action"
 
-export default function RatingReviewPage({ product}) {
+export default function RatingReviewPage({ product }) {
   const [rating, setRating] = useState(0)
   const [hoveredRating, setHoveredRating] = useState(0)
   const [review, setReview] = useState("")
@@ -25,11 +27,16 @@ export default function RatingReviewPage({ product}) {
       alert("Please select a rating")
       return
     }
-
+    
     setIsSubmitting(true)
+    //    productId: Number(productId),
+    //     userId: Number(userId),
+    //     rate: Number(rate),
+    //     content: comment,
+    const response = await createComment(product.id, rating, review)
+
 
     try {
-
       setRating(0)
       setReview("")
       alert("Review submitted successfully!")
@@ -46,21 +53,47 @@ export default function RatingReviewPage({ product}) {
       {/* Header */}
       <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">Rating and Review</h2>
 
-      {/* Illustration */}
-      <div className="flex justify-center mb-6">
-        <img
-          src={`/images/${product.image}`}
-          alt="Review illustration"
-          className="w-48 h-32 object-contain"
-        />
+      {/* Product Card */}
+      <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+        {/* Product Image - Larger Size */}
+        <div className="flex justify-center bg-gray-50 p-4">
+          <img src={`/images/${product.image}`} alt={product.name} className="w-full h-64 object-contain" />
+        </div>
+
+        {/* Product Details */}
+        <div className="p-4 border-t border-gray-100">
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="font-semibold text-lg text-gray-900">{product.name}</h3>
+              {product.category && <p className="text-sm text-gray-500 mt-1">{product.category}</p>}
+            </div>
+            <div className="text-right">
+              <p className="font-medium text-gray-900">
+                {typeof product.price === "number" ? `Rp ${formatterCurrency.format(product.price)}` : product.price}
+              </p>
+            </div>
+          </div>
+
+          {/* Product Attributes (if available) */}
+          {product.attributes && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {Object.entries(product.attributes).map(([key, value]) => (
+                <span
+                  key={key}
+                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                >
+                  {key}: {value}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Question */}
       <div className="text-center mb-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-2">How's your order this time?</h3>
       </div>
 
-      {/* Rating Section */}
       <div className="mb-6">
         <h4 className="text-base font-medium text-gray-900 mb-4">Rating</h4>
         <div className="flex justify-center gap-2">
@@ -101,7 +134,7 @@ export default function RatingReviewPage({ product}) {
         )}
       </div>
 
-      {/* Review Section */}
+
       <div className="mb-6">
         <h4 className="text-base font-medium text-gray-900 mb-4">Review</h4>
         <textarea
@@ -117,11 +150,10 @@ export default function RatingReviewPage({ product}) {
         </div>
       </div>
 
-      {/* Submit Button */}
       <button
         onClick={handleSubmit}
         disabled={rating === 0 || isSubmitting}
-        className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
+        className={`w-full py-3 px-4 rounded-lg mb-8 font-medium transition-all duration-200 ${
           rating === 0 || isSubmitting
             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
             : "bg-gray-800 hover:bg-gray-900 text-white transform hover:scale-[1.02] active:scale-[0.98]"

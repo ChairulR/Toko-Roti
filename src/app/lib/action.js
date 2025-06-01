@@ -313,3 +313,34 @@ export const getOrderById = async (orderId, userId) => {
     };
   }
 };
+
+export const createComment = async (productId, userId, rate, comment) => {
+  try {
+    const newComment = await prisma.comment.create({
+      data: {
+        productId: Number(productId),
+        userId: Number(userId),
+        rate: Number(rate),
+        content: comment,
+      },
+    });
+
+    return {
+      success: true,
+      data: {
+        id: newComment.id,
+        userId: newComment.userId,
+        rate: newComment.rate,
+        comment: newComment.content,
+        createdAt: newComment.createdAt,
+        updatedAt: newComment.updatedAt,
+      },
+    };
+  } catch (error) {
+    console.error("Error creating comment:", error);
+    return {
+      success: false,
+      message: "Failed to create comment",
+    };
+  }
+}
