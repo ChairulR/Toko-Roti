@@ -28,7 +28,7 @@ export default function HistoryPage() {
   }, []);
 
   if (loading) {
-    return <Loading message="Loading product" />;
+    return <Loading message="Loading history" />;
   }
   if (history.length === 0) return <p className="text-center text-gray-500">Belum ada riwayat pembelian.</p>;
 
