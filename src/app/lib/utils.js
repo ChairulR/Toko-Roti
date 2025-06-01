@@ -23,7 +23,7 @@ export const formatterCurrency = new Intl.NumberFormat('id-ID', {
 
 
 
-export const getTrackingSteps = (currentStatus ) => {
+export const getTrackingSteps = (currentStatus) => {
   const steps = [
     {
       id: 1,
@@ -63,6 +63,14 @@ export const getTrackingSteps = (currentStatus ) => {
         cancelled: true,
       },
     ]
+  }
+
+  if (currentStatus === OrderStatus.COMPLETED) {
+    return steps.map((step) => ({
+      ...step,
+      completed: true,
+      current: false,
+    }))
   }
 
   const statusOrder = [OrderStatus.PURCESHED, OrderStatus.PROCESS, OrderStatus.COMPLETED]
