@@ -7,7 +7,7 @@ export default function QRISPaymentPage() {
 
   return (
     <div className="qris-payment-page text-center">
-      <h2>🔗 Pembayaran via QRIS</h2>
+      <h2>🔗 Pembayaran QRIS</h2>
       <p>Scan kode QR berikut untuk menyelesaikan pembayaran.</p>
       <img src={`/api/generateQR?orderId=${orderId}`} alt="QRIS Payment" />
 

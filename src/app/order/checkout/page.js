@@ -41,11 +41,11 @@ export default function CheckoutPage() {
 
   const handleCheckout = async () => {
     const { createOrder } = await import("@/app/lib/action");
-    const result = await createOrder(1, id, quantity, paymentMethod); // Simpan order dengan metode pembayaran
+    const result = await createOrder(1, id, quantity, paymentMethod);
 
     if (result.success) {
       if (paymentMethod === "QRIS") {
-        router.push(`/order/payment/qris?id=${result.data.id}`);
+        router.push(`/order/payment/qris?id=${id}`);
       } else {
         router.push(`/order/history`);
       }
