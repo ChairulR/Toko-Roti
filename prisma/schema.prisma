@@ -69,6 +69,6 @@ enum OrderStatus {
   PURCESHED
   PROCESS
   COMPLETED
-  PENDIN
+  PENDING
   CANCELLED
 }

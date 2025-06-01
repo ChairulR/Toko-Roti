@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Loading from "@/app/components/loading";
 
 export default function HistoryPage() {
   const [history, setHistory] = useState([]);
@@ -25,7 +26,10 @@ export default function HistoryPage() {
     fetchHistory();
   }, []);
 
-  if (loading) return <p>Loading history...</p>;
+  if (loading) {
+    return <Loading message="Loading product" />;
+  }
+  
   if (history.length === 0) return <p className="text-center text-gray-500">Belum ada riwayat pembelian.</p>;
 
   return (
