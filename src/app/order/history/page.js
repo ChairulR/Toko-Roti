@@ -10,11 +10,12 @@ export default function HistoryPage() {
     async function fetchHistory() {
       setLoading(true);
       try {
-        const { getUserOrderHistory } = await import("@/app/lib/action");
-        const result = await getUserOrderHistory();
+        const { getUserById } = await import("@/app/lib/action");
+        const userId = 1; // Gantilah dengan ID user yang sedang login
+        const result = await getUserById(userId);
 
-        if (result.success) {
-          setHistory(result.data);
+        if (result) {
+          setHistory(result.orders);
         }
       } catch (error) {
         console.error("Error fetching history:", error);
@@ -29,7 +30,6 @@ export default function HistoryPage() {
   if (loading) {
     return <Loading message="Loading product" />;
   }
-  
   if (history.length === 0) return <p className="text-center text-gray-500">Belum ada riwayat pembelian.</p>;
 
   return (
@@ -38,10 +38,12 @@ export default function HistoryPage() {
       <ul className="history-list">
         {history.map((order) => (
           <li key={order.id} className="history-item">
-            <p><strong>{order.productName}</strong></p>
-            <p>🗓 {order.date}</p>
-            <p>💰 Rp{order.totalPrice.toLocaleString()}</p>
-            <button className="history-btn">🔍 Lihat Detail</button>
+            <p><strong>{order.product.name}</strong></p>
+            <p>🗓 {new Date(order.createdAt).toLocaleDateString()}</p>
+            <p>📦 Jumlah: {order.qty}</p>
+            <p>💰 Total: Rp{(order.product.price * order.qty).toLocaleString()}</p>
+            <p>Status: <strong>{order.status}</strong></p>
+            <button className="history-btn">🔍 Beri Rating</button>
           </li>
         ))}
       </ul>
