@@ -274,7 +274,7 @@ export const getOrderById = async (orderId, userId) => {
     });
 
     return {
-      status: 200,
+      status: true,
       data: {
         id: order.id,
         userId: order.userId,

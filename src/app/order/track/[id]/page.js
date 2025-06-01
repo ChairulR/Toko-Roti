@@ -47,7 +47,7 @@ export default async function Page({ params }) {
     );
   }
 
-    if(!user || !orders || orders.status !== 200 || !orders.data) {
+    if(!user || !orders || orders.status === false || !orders.data) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <p className="text-red-500">Order not found or you do not have permission to view this order.</p>
