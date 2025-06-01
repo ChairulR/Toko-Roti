@@ -1,75 +1,97 @@
-"use client"
+"use client";
 
-import { formatterCurrency } from "@/app/lib/utils"
-import { useState } from "react"
-import { createComment } from "../lib/action"
+import { formatterCurrency } from "@/app/lib/utils";
+import { useState } from "react";
+import { createComment } from "../lib/action";
+import { number } from "framer-motion";
 
-export default function RatingReviewPage({ product }) {
-  const [rating, setRating] = useState(0)
-  const [hoveredRating, setHoveredRating] = useState(0)
-  const [review, setReview] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
+export default function RatingReviewPage({ product, userId }) {
+  const [rating, setRating] = useState(0);
+  const [hoveredRating, setHoveredRating] = useState(0);
+  const [review, setReview] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleStarClick = (starIndex) => {
-    setRating(starIndex)
-  }
+    setRating(starIndex);
+  };
 
   const handleStarHover = (starIndex) => {
-    setHoveredRating(starIndex)
-  }
+    setHoveredRating(starIndex);
+  };
 
   const handleStarLeave = () => {
-    setHoveredRating(0)
-  }
+    setHoveredRating(0);
+  };
 
   const handleSubmit = async () => {
     if (rating === 0) {
-      alert("Please select a rating")
-      return
+      alert("Please select a rating");
+      return;
     }
-    
-    setIsSubmitting(true)
+
+    setIsSubmitting(true);
     //    productId: Number(productId),
     //     userId: Number(userId),
     //     rate: Number(rate),
     //     content: comment,
-    const response = await createComment(product.id, rating, review)
-
 
     try {
-      setRating(0)
-      setReview("")
-      alert("Review submitted successfully!")
+      setRating(0);
+
+      const response = await createComment(
+        Number(product.id),
+        number(rating),
+        review,
+        number(userId)
+      );
+
+      if (!response || response.status === false) {
+        throw new Error(response.message || "Failed to submit review");
+      }
+      setReview("");
+      alert("Review submitted successfully!");
     } catch (error) {
-      console.error("Error submitting review:", error)
-      alert("Failed to submit review. Please try again.")
+      console.error("Error submitting review:", error);
+      alert("Failed to submit review. Please try again.");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="max-w-md mx-auto px-4 py-10">
       {/* Header */}
-      <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">Rating and Review</h2>
+      <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">
+        Rating and Review
+      </h2>
 
       {/* Product Card */}
       <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
         {/* Product Image - Larger Size */}
         <div className="flex justify-center bg-gray-50 p-4">
-          <img src={`/images/${product.image}`} alt={product.name} className="w-full h-64 object-contain" />
+          <img
+            src={`/images/${product.image}`}
+            alt={product.name}
+            className="w-full h-64 object-contain"
+          />
         </div>
 
         {/* Product Details */}
         <div className="p-4 border-t border-gray-100">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="font-semibold text-lg text-gray-900">{product.name}</h3>
-              {product.category && <p className="text-sm text-gray-500 mt-1">{product.category}</p>}
+              <h3 className="font-semibold text-lg text-gray-900">
+                {product.name}
+              </h3>
+              {product.category && (
+                <p className="text-sm text-gray-500 mt-1">{product.category}</p>
+              )}
             </div>
             <div className="text-right">
               <p className="font-medium text-gray-900">
-                {typeof product.price === "number" ? `Rp ${formatterCurrency.format(product.price)}` : product.price}
+                {typeof product.price === "number"
+                  ? `Rp ${formatterCurrency.format(product.price)}`
+                  : product.price}
               </p>
             </div>
           </div>
@@ -91,7 +113,9 @@ export default function RatingReviewPage({ product }) {
       </div>
 
       <div className="text-center mb-6">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">How's your order this time?</h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          How's your order this time?
+        </h3>
       </div>
 
       <div className="mb-6">
@@ -107,7 +131,9 @@ export default function RatingReviewPage({ product }) {
             >
               <svg
                 className={`w-10 h-10 transition-colors ${
-                  star <= (hoveredRating || rating) ? "text-yellow-400 fill-current" : "text-gray-300"
+                  star <= (hoveredRating || rating)
+                    ? "text-yellow-400 fill-current"
+                    : "text-gray-300"
                 }`}
                 fill="none"
                 stroke="currentColor"
@@ -134,7 +160,6 @@ export default function RatingReviewPage({ product }) {
         )}
       </div>
 
-
       <div className="mb-6">
         <h4 className="text-base font-medium text-gray-900 mb-4">Review</h4>
         <textarea
@@ -145,7 +170,9 @@ export default function RatingReviewPage({ product }) {
           maxLength={500}
         />
         <div className="flex justify-between items-center mt-2">
-          <p className="text-xs text-gray-500">Reviews will be visible to the public</p>
+          <p className="text-xs text-gray-500">
+            Reviews will be visible to the public
+          </p>
           <p className="text-xs text-gray-400">{review.length}/500</p>
         </div>
       </div>
@@ -169,5 +196,5 @@ export default function RatingReviewPage({ product }) {
         )}
       </button>
     </div>
-  )
+  );
 }

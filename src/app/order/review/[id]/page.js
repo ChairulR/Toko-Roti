@@ -19,7 +19,7 @@ async function page({ params }) {
     }
     return (
       <div>
-        <RatingReviewPage product={order.data.product}/>
+        <RatingReviewPage product={order.data.product} userId={userId}/>
       </div>
     );
   } catch (error) {
