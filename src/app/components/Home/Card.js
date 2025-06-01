@@ -1,8 +1,6 @@
 import React from "react";
 import Link from "next/link";
 
-
-
 function Card({activePage, filteredProducts}) {
   return (
     <div>
@@ -23,8 +21,7 @@ function Card({activePage, filteredProducts}) {
         
         <div className="cards">
           {filteredProducts.map((item) => (
-            
-            //ini tidak boleh link di dalam link @husskky @ChairulR
+
             <Link key={item.id} href={`/view/${item.id}`}>
               <div key={item.id} className="card">
                 <img src={`/images/${item.image}`} alt={item.name} />

@@ -136,25 +136,27 @@ body {
   flex-direction: column; 
   align-items: center;
   justify-content: center; 
-  height: 250px; 
-  width: 200px;
+  height: 300px; 
+  width: auto;
   padding: 10px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  background: #fff;
+  background: rgb(249, 240, 223);
   border-radius: 8px;
   text-align: center;
 }
 
 .card img {
   max-width: 180%;
-  max-height: 85%;
+  max-height: 80%;
   object-fit: fill;
   display: block;
   margin: auto; 
+  margin-top: 12px;
+  border-radius: 10px;
 }
 
 .product-name {
-  font-size: 14px;
+  font-size: 15px;
   margin: 8px 0 4px;
 }
 
