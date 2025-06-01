@@ -97,6 +97,21 @@ export const getUserById = async (id) => {
       where: {
         id: Number(id),
       },
+      include:{
+        orders: {
+          include: {
+            product: {
+              select: {
+                id: true,
+                name: true,
+                price: true,
+                image: true,
+                flavor: true,
+              },
+            },
+          },
+        },
+      }
     });
     if (!user) {
       return null;
@@ -105,8 +120,12 @@ export const getUserById = async (id) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      orders: user.orders.map((order) => ({
+        id: order.id,
+      })),
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      
     };
   } catch (error) {
     throw new Error("Something went wrong");

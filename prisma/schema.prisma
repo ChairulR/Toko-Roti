@@ -40,6 +40,8 @@ model Comment {
   userId    Int
   product   Product  @relation(fields: [productId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
+  orderId  Int?
+  order    Order?   @relation(fields: [orderId], references: [id])
 }
 
 model Banner {
@@ -56,7 +58,7 @@ model Order {
   productId Int
   user      User     @relation(fields: [userId], references: [id])
   product   Product  @relation(fields: [productId], references: [id])
-  rating    Int
+  comments  Comment[]
   status   OrderStatus @default(PROCESS)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
