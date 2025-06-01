@@ -97,7 +97,7 @@ export const getUserById = async (id) => {
       where: {
         id: Number(id),
       },
-      include:{
+      include: {
         orders: {
           include: {
             product: {
@@ -111,7 +111,7 @@ export const getUserById = async (id) => {
             },
           },
         },
-      }
+      },
     });
     if (!user) {
       return null;
@@ -122,10 +122,19 @@ export const getUserById = async (id) => {
       email: user.email,
       orders: user.orders.map((order) => ({
         id: order.id,
+        status: order.status,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+        product: {
+          id: order.product.id,
+          name: order.product.name,
+          price: order.product.price,
+          image: order.product.image,
+          flavor: order.product.flavor,
+        },
       })),
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      
     };
   } catch (error) {
     throw new Error("Something went wrong");
@@ -236,4 +245,55 @@ export const getProductById = async (id) => {
     console.error(error);
     throw new Error("Something went wrong");
   }
+};
+
+export const getOrderById = async (orderId, userId) => {
+  try {
+    const order = await prisma.order.findUnique({
+      where: {
+        id: Number(orderId),
+        userId: Number(userId),
+      },
+      include: {
+        product: {
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            image: true,
+            flavor: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return {
+      status: 200,
+      data: {
+        id: order.id,
+        userId: order.userId,
+        productId: order.productId,
+        status: order.status,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+        product: {
+          id: order.product.id,
+          name: order.product.name,
+          price: order.product.price,
+          image: order.product.image,
+          flavor: order.product.flavor,
+        },
+        user: {
+          id: order.user.id,
+          name: order.user.name,
+        },
+      },
+    };
+  } catch (error) {}
 };
