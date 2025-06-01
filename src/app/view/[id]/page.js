@@ -36,6 +36,7 @@ export default function ProductDetailPage() {
 const fecthOrder = async () =>{
     router.push(`/checkout/${id}?quantity=${count}&note=${note}`);
 }
+
   useEffect(() => {
     fetching();
   }, [id]);

@@ -8,20 +8,21 @@ import Banner from "@/app/components/Home/Banner";
 import ProductDetailPopup from "@/app/components/ProductDetailPopup";
 import Card from "@/app/components/Home/Card";
 
-
 export default function Home({ products, activeTab }) {
   const [selectedProduct, setSelectedProduct] = useState();
 
   return (
     <div className="container-home">
+      {/* Bagian Welcome */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="welcome-section"
       >
-        <div className="Selamatdtg">
-          Selamat Datang di Toko Roti Mayra D'Light!
-        </div>
+        <h1 className="welcome-title">Selamat Datang di</h1>
+        <h2 className="brand-name">Toko Roti <span>Mayra D'Light 🤍</span></h2>
+        <p className="welcome-subtitle">Nikmati kelezatan roti terbaik dengan bahan berkualitas!</p>
       </motion.div>
 
       {/* Search Bar */}
