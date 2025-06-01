@@ -57,7 +57,7 @@ model Order {
   user      User     @relation(fields: [userId], references: [id])
   product   Product  @relation(fields: [productId], references: [id])
   rating    Int
-  status   OrderStatus @default(PENDING)
+  status   OrderStatus @default(PROCESS)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
