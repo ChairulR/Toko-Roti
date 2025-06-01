@@ -48,12 +48,12 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-white;">
       {/* Gambar Produk */}
-      <div className="relative w-full aspect-[4/3]">
+      <div className="relative w-full aspect-[10/3]">
         <Image
           src={`/images/${product.image}`}
           alt={product.name}
           fill
-          className="object-cover"
+          className="object-center"
         />
       </div>
 
