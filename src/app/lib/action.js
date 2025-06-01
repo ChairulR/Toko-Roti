@@ -316,17 +316,27 @@ export const getOrderById = async (orderId, userId) => {
 
 export const createComment = async (productId, userId, rate, comment) => {
   try {
+    const ratingValue = (rate);
+    if (ratingValue < 1 || ratingValue > 5) {
+      return { success: false, message: "Rating harus antara 1 hingga 5" };
+    }
+
+    if (!comment || comment.length > 500) {
+      return { success: false, message: "Komentar harus diisi dan maksimal 500 karakter" };
+    }
+
     const newComment = await prisma.comment.create({
       data: {
         productId: (productId),
         userId: (userId),
-        rate: (rate),
+        rate: ratingValue,
         content: comment,
       },
     });
 
     return {
       success: true,
+      message: "Komentar berhasil ditambahkan",
       data: {
         id: newComment.id,
         userId: newComment.userId,
@@ -338,12 +348,9 @@ export const createComment = async (productId, userId, rate, comment) => {
     };
   } catch (error) {
     console.error("Error creating comment:", error);
-    return {
-      success: false,
-      message: "Failed to create comment",
-    };
+    return { success: false, message: "Terjadi kesalahan saat menyimpan komentar" };
   }
-}
+};
 
 export const createOrder = async (userId, productId, qty) => {
   try {
