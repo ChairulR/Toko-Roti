@@ -34,7 +34,7 @@ function Navigation() {
         </button>
       </Link>
 
-    <Link href="/history">
+    <Link href="/order/history">
       <button
         className={`nav-item ${activePage === "history" ? "active" : ""}`}
       >
