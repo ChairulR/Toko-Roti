@@ -46,7 +46,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white;">
       {/* Gambar Produk */}
       <div className="relative w-full aspect-[4/3]">
         <Image
