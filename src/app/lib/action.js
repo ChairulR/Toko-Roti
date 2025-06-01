@@ -316,7 +316,8 @@ export const getOrderById = async (orderId, userId) => {
 
 export const createComment = async (productId, userId, rate, comment) => {
   try {
-    const ratingValue = (rate);
+
+    const ratingValue = rate;
     if (ratingValue < 1 || ratingValue > 5) {
       return { success: false, message: "Rating harus antara 1 hingga 5" };
     }
@@ -327,8 +328,8 @@ export const createComment = async (productId, userId, rate, comment) => {
 
     const newComment = await prisma.comment.create({
       data: {
-        productId: (productId),
-        userId: (userId),
+        productId: productId,
+        userId: userId,
         rate: ratingValue,
         content: comment,
       },
