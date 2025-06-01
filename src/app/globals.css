@@ -795,6 +795,48 @@ body {
   background: #895E44;
 }
 
+.payment-method {
+  margin-top: 20px;
+  padding: 16px;
+  background: #fff9e6;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.payment-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #3E2723;
+  margin-bottom: 12px;
+}
+
+.payment-options {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.payment-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.payment-btn:hover {
+  background: #FFD700;
+}
+
+.selected {
+  background: red;
+  color: white;
+}
+
 @keyframes slideTab {
   from {
     width: 0%;
