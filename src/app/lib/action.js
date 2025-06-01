@@ -137,6 +137,7 @@ export const getUserById = async (id) => {
       updatedAt: user.updatedAt,
     };
   } catch (error) {
+    console.error("Error fetching user by ID:", error);
     throw new Error("Something went wrong");
   }
 };
