@@ -138,7 +138,6 @@ export const getUserById = async (id) => {
     };
   } catch (error) {
     console.error("Error fetching user by ID:", error);
-    throw new Error("Something went wrong");
   }
 };
 
@@ -274,6 +273,14 @@ export const getOrderById = async (orderId, userId) => {
       },
     });
 
+    if (!order) {
+      return {
+        status: false,
+        data: null,
+        message: "Order not found",
+      };
+    }
+
     return {
       status: true,
       data: {
@@ -286,6 +293,7 @@ export const getOrderById = async (orderId, userId) => {
         product: {
           id: order.product.id,
           name: order.product.name,
+          image: order.product.image,
           price: order.product.price,
           image: order.product.image,
           flavor: order.product.flavor,
@@ -300,7 +308,8 @@ export const getOrderById = async (orderId, userId) => {
     console.error("Error fetching order by ID:", error);
     return {
       status: false,
-      message: "Order not found or you do not have permission to view this order.",
+      message:
+        "Order not found or you do not have permission to view this order.",
     };
   }
 };

@@ -103,8 +103,8 @@ export const getButtonText = (status) => {
     case OrderStatus.CANCELLED:
       return "Order Cancelled"
     case OrderStatus.PROCESS:
-      return "Track Order"
+      return "Take Order"
     default:
-      return "View Order"
+      return "Take Order"
   }
 }
