@@ -69,5 +69,9 @@ enum OrderStatus {
   PURCESHED
   PROCESS
   COMPLETED
+<<<<<<< HEAD
+  PENDING
+=======
+>>>>>>> f18a9b050a9920814567678fe98953e1b7fad33f
   CANCELLED
 }

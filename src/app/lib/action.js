@@ -318,10 +318,7 @@ export const createComment = async (productId, userId, rate, comment) => {
   try {
     const newComment = await prisma.comment.create({
       data: {
-        productId: Number(productId),
-        userId: Number(userId),
-        rate: Number(rate),
-        c: comment,
+
       },
     });
 
@@ -344,3 +341,28 @@ export const createComment = async (productId, userId, rate, comment) => {
     };
   }
 }
+
+export const createOrder = async (userId, productId, qty) => {
+  try {
+    const order = await prisma.order.create({
+      data: {
+        userId: Number(userId),
+        productId: Number(productId),
+        qty: Number(qty),
+        status: "PROCESS",
+      },
+    });
+
+    return {
+      success: true,
+      message: "Order berhasil dibuat",
+      data: order,
+    };
+  } catch (error) {
+    console.error("Error creating order:", error);
+    return {
+      success: false,
+      message: "Terjadi kesalahan dalam pemesanan",
+    };
+  }
+};
