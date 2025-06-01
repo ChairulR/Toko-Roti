@@ -94,7 +94,7 @@ export default function RegisterForm() {
               type="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Masukkan email Anda"
+              placeholder="Masukkan nama Anda"
               className="p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200"
               required
             />
