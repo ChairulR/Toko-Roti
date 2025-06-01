@@ -1,8 +1,12 @@
 import Home from "./components/Home";
+import { getProductByQuery } from "@/app/lib/action";
 
-export default function Page({ searchParams }) {
-  const flavor =  searchParams?.flavor ?? "sweet";
-  const query =  searchParams?.query ?? "";
+export default async function Page({ searchParams }) {
+  const flavor = searchParams?.flavor ?? "sweet";
+  const query = searchParams?.query ?? "";
 
-  return <Home flavor={flavor} query={query} />;
+  const response = await getProductByQuery(query, flavor);
+  const products = response.data;
+
+  return <Home products={products} activeTab={flavor} query={query} />;
 }
