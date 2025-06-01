@@ -58,6 +58,7 @@ model Order {
   productId Int
   user      User     @relation(fields: [userId], references: [id])
   product   Product  @relation(fields: [productId], references: [id])
+  qty       Int
   comments  Comment[]
   status   OrderStatus @default(PROCESS)
   createdAt DateTime @default(now())

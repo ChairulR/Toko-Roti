@@ -712,8 +712,11 @@ body {
 }
 
 .checkout-page {
-  max-width: 480px;
+  max-width: 100vh;
   margin: auto;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
   padding: 20px;
   background: #fff9e6;
   border-radius: 12px;
@@ -739,17 +742,18 @@ body {
 }
 
 .checkout-card {
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 20px;
   background: white;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 16px;
+  border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .checkout-img {
-  border-radius: 8px;
+  border-radius: 12px;
   object-fit: cover;
 }
 
@@ -766,8 +770,10 @@ body {
 
 .checkout-summary {
   padding-top: 12px;
-  border-top: 2px solid #E0E0E0;
+  border-top: 2px;
   margin-top: 20px;
+  background-color: white;
+  border-radius: 12px;
 }
 
 .checkout-btn {

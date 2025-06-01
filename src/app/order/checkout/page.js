@@ -67,11 +67,11 @@ export default function CheckoutPage() {
 
       {/* Ringkasan Harga */}
       <div className="checkout-summary">
-        <div className="flex justify-between mb-2">
+        <div className="flex justify-between w-full px-6 mb-2">
           <span className="text-sm text-gray-600">💰 Harga per item</span>
           <span className="text-sm">Rp{product.price.toLocaleString()}</span>
         </div>
-        <div className="flex justify-between font-semibold">
+        <div className="flex justify-between w-full px-6 font-semibold">
           <span>💳 Total ({quantity} item)</span>
           <span>Rp{totalPrice.toLocaleString()}</span>
         </div>
