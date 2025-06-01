@@ -3,7 +3,6 @@
 import { formatterCurrency } from "@/app/lib/utils";
 import { useState } from "react";
 import { createComment } from "../lib/action";
-import { number } from "framer-motion";
 
 export default function RatingReviewPage({ product, userId }) {
   const [rating, setRating] = useState(0);
@@ -30,20 +29,16 @@ export default function RatingReviewPage({ product, userId }) {
     }
 
     setIsSubmitting(true);
-    //    productId: Number(productId),
-    //     userId: Number(userId),
-    //     rate: Number(rate),
-    //     content: comment,
 
     try {
       setRating(0);
-
       const response = await createComment(
-        Number(product.id),
-        number(rating),
+        parseInt(product.id),
+        parseInt(userId),
+        parseInt(rating),
         review,
-        number(userId)
       );
+      console.log("Response from createComment:", response);
 
       if (!response || response.status === false) {
         throw new Error(response.message || "Failed to submit review");
@@ -60,14 +55,11 @@ export default function RatingReviewPage({ product, userId }) {
 
   return (
     <div className="max-w-md mx-auto px-4 py-10">
-      {/* Header */}
       <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">
         Rating and Review
       </h2>
 
-      {/* Product Card */}
       <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-        {/* Product Image - Larger Size */}
         <div className="flex justify-center bg-gray-50 p-4">
           <img
             src={`/images/${product.image}`}
@@ -76,7 +68,6 @@ export default function RatingReviewPage({ product, userId }) {
           />
         </div>
 
-        {/* Product Details */}
         <div className="p-4 border-t border-gray-100">
           <div className="flex justify-between items-start">
             <div>
@@ -96,7 +87,6 @@ export default function RatingReviewPage({ product, userId }) {
             </div>
           </div>
 
-          {/* Product Attributes (if available) */}
           {product.attributes && (
             <div className="mt-3 flex flex-wrap gap-2">
               {Object.entries(product.attributes).map(([key, value]) => (
