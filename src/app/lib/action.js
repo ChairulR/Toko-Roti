@@ -295,5 +295,11 @@ export const getOrderById = async (orderId, userId) => {
         },
       },
     };
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error fetching order by ID:", error);
+    return {
+      status: false,
+      message: "Order not found or you do not have permission to view this order.",
+    };
+  }
 };
