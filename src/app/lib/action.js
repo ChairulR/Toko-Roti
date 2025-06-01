@@ -321,7 +321,7 @@ export const createComment = async (productId, userId, rate, comment) => {
         productId: Number(productId),
         userId: Number(userId),
         rate: Number(rate),
-        content: comment,
+        c: comment,
       },
     });
 
