@@ -15,7 +15,6 @@ export default async function Page({ params }) {
 
     const { id } = params;
     const userId = session.user?.id;
-
     const user = await getUserById(userId);
     const orders = await getOrderById(id, userId);
 
