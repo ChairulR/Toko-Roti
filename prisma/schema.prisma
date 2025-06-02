@@ -61,14 +61,14 @@ model Order {
   product   Product  @relation(fields: [productId], references: [id])
   qty       Int @default(1)
   comments  Comment[]
-  status   OrderStatus @default(PROCESS)
+  status   OrderStatus @default(PURCHASED)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   payment PaymentMethod @default(COD)
 }
 
 enum OrderStatus {
-  PURCESHED
+  PURCHASED
   PROCESS
   COMPLETED
   CANCELLED
