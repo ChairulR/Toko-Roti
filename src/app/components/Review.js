@@ -29,22 +29,21 @@ export default function RatingReviewPage({ product, userId }) {
     }
 
     setIsSubmitting(true);
-
     try {
-      setRating(0);
       const response = await createComment(
         parseInt(product.id),
         parseInt(userId),
         parseInt(rating),
-        review,
+        review
       );
-
 
       if (!response || response.status === false) {
         throw new Error(response.message || "Failed to submit review");
       }
+
       setReview("");
       alert("Review submitted successfully!");
+      router.push("/order/history"); // ✅ Redirect setelah review
     } catch (error) {
       console.error("Error submitting review:", error);
       alert("Failed to submit review. Please try again.");
@@ -52,6 +51,8 @@ export default function RatingReviewPage({ product, userId }) {
       setIsSubmitting(false);
     }
   };
+
+
 
   return (
     <div className="max-w-md mx-auto px-4 py-10">

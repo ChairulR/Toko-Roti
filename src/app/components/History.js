@@ -5,7 +5,7 @@ import Loading from "@/app/components/loading";
 import Link from "next/link";
 import { getUserById } from "@/app/lib/action";
 
-export default function HistoryPage({userId}) {
+export default function HistoryPage({ userId }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +13,6 @@ export default function HistoryPage({userId}) {
     async function fetchHistory() {
       setLoading(true);
       try {
-
         const result = await getUserById(userId);
         if (result && result.orders) {
           setHistory(result.orders);
@@ -29,7 +28,8 @@ export default function HistoryPage({userId}) {
   }, []);
 
   if (loading) return <Loading message="Loading history" />;
-  if (history.length === 0) return <p className="text-center text-gray-500 mt-10">Belum ada riwayat pembelian.</p>;
+  if (history.length === 0)
+    return <p className="text-center text-gray-500 mt-10">Belum ada riwayat pembelian.</p>;
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
@@ -56,13 +56,24 @@ export default function HistoryPage({userId}) {
               </p>
             </div>
 
+            {order.rating !== null && (
+              <div className="mt-2 text-sm text-gray-600">
+                <p>⭐ {order.rating} / 5</p>
+                {order.notes && <p className="italic">"{order.notes}"</p>}
+              </div>
+            )}
+
             <div className="mt-3">
-              <Link
-                href={`/order/review/${order.id}`}
-                className="text-blue-600 hover:underline text-sm"
-              >
-                🔍 Beri Rating
-              </Link>
+              {order.rating === null ? (
+                <Link
+                  href={`/order/review/${order.id}`}
+                  className="text-blue-600 hover:underline text-sm"
+                >
+                  ⭐ Beri Rating
+                </Link>
+              ) : (
+                <span className="text-green-600 text-sm">✅ Sudah direview</span>
+              )}
             </div>
           </li>
         ))}

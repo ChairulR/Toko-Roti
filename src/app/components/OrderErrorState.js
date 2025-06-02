@@ -133,7 +133,7 @@ export default function OrderErrorState({ type = "not-found" }) {
                   break
                 default:
                   // Go to orders page
-                  window.location.href = "/orders"
+                  window.location.href = "/order/history"
               }
             }}
           >

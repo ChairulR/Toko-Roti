@@ -12,19 +12,20 @@ async function page({ params }) {
     if (!session || !session.user?.id) {
       return <OrderErrorState type="no-user" />;
     }
+
     const userId = session.user.id;
-    if(session.user.id) {
-      
-    }
     const order = await getOrderById(id, userId);
-    if (!order || order.status === false || !order.data) {
-      return <OrderErrorState type="no-orders" />;
-    }
-    return (
-      <div>
-        <RatingReviewPage product={order.data.product} userId={userId}/>
-      </div>
-    );
+
+  if (!order || order.status === false || !order.data) {
+    return <OrderErrorState type="no-orders" />;
+  }
+
+  if (order.data.rating !== null) {
+    return <OrderErrorState type="already-reviewed" />;
+  }
+
+
+    return <RatingReviewPage product={order.data.product} userId={userId} />;
   } catch (error) {
     console.error("Error loading review page:", error);
     return <OrderErrorState type="server-error" />;
