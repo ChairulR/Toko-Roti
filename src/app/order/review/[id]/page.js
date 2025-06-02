@@ -24,7 +24,6 @@ async function page({ params }) {
     return <OrderErrorState type="already-reviewed" />;
   }
 
-
     return <RatingReviewPage product={order.data.product} userId={userId} />;
   } catch (error) {
     console.error("Error loading review page:", error);

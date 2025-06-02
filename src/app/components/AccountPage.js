@@ -14,10 +14,7 @@ export default function ProfilePage({ user }) {
   const [profile, setProfile] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
-  const [updatedProfile, setUpdatedProfile] = useState({
-    name: "",
-    email: "",
-  });
+  const [updatedProfile, setUpdatedProfile] = useState({ name: "" });
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -26,7 +23,7 @@ export default function ProfilePage({ user }) {
         const res = await getUserById(user.id);
         if (res) {
           setProfile(res);
-          setUpdatedProfile({ name: res.name, email: res.email });
+          setUpdatedProfile({ name: res.name });
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -50,21 +47,19 @@ export default function ProfilePage({ user }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put("/api/account", updatedProfile);
-      alert("Profil berhasil diperbarui!");
-      setProfile(updatedProfile);
+      await axios.put("/api/account", { name: updatedProfile.name });
+      alert("Nama berhasil diperbarui!");
+      setProfile({ ...profile, name: updatedProfile.name });
       setEditMode(false);
     } catch (error) {
       console.error("Gagal memperbarui profil:", error);
     }
   };
 
-  if (isLoading) {
-    return <ProfileSkeleton />;
-  }
+  if (isLoading) return <ProfileSkeleton />;
 
   return (
-    <div className="container min-h-screen flex flex-col pb-20">
+    <div className="w-full min-h-screen flex flex-col pb-24 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-40 bg-gray-50">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -72,7 +67,7 @@ export default function ProfilePage({ user }) {
         transition={{ duration: 0.5 }}
         className="py-4 border-b border-gray-100"
       >
-        <div className="flex items-center">
+        <div className="w-full flex items-center">
           <button onClick={() => router.push("/")} className="p-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -89,88 +84,104 @@ export default function ProfilePage({ user }) {
               <path d="m15 18-6-6 6-6" />
             </svg>
           </button>
-          <h1 className="text-xl font-bold flex-1 text-center pr-8">Profil Saya</h1>
+          <h1 className="text-xl font-bold flex-1 text-center pr-8">
+            Profil Saya
+          </h1>
         </div>
       </motion.div>
 
-      {/* Profile Picture & Info */}
+      {/* Profil Foto + Nama */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.1 }}
         className="flex flex-col items-center py-6"
       >
-        <div className="w-24 h-24 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center mb-3">
-          <span className="text-3xl font-bold text-gray-500">{profile.name?.charAt(0)}</span>
+        <div className="relative w-24 h-24 mb-3 rounded-full bg-gradient-to-br from-indigo-500 to-pink-500 shadow-lg flex items-center justify-center">
+          <span className="text-white text-4xl font-bold">
+            {profile.name?.charAt(0).toUpperCase()}
+          </span>
         </div>
-        <h2 className="text-xl font-bold">{profile.name}</h2>
-        <p className="text-gray-500 text-sm">Member sejak {formatDateToDMY(profile.createdAt)}</p>
+        <h2 className="text-xl font-bold text-gray-800">{profile.name}</h2>
+        <p className="text-gray-500 text-sm">
+          Member sejak {formatDateToDMY(profile.createdAt)}
+        </p>
       </motion.div>
 
-      {/* User Information */}
+      {/* Informasi Akun */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="p-4"
+        className="p-4 flex-1"
       >
-        <div className="bg-gray-50 rounded-lg p-4 mb-4">
-          <h3 className="text-sm font-medium text-gray-500 mb-3">Informasi Akun</h3>
-
+        <div className="w-full max-w-2xl bg-white border border-gray-200 rounded-xl p-4 shadow-xl mx-auto">
+          <h3 className="text-sm font-semibold text-gray-600 mb-3 flex items-center gap-2">
+            👤 Informasi Akun
+          </h3>
           {editMode ? (
-            <form onSubmit={handleSubmit} className="edit-profile-form">
-              <div className="space-y-3">
-                <div>
-                  <p className="text-xs text-gray-500">Nama</p>
-                  <input
-                    type="text"
-                    name="name"
-                    value={updatedProfile.name}
-                    onChange={handleChange}
-                    className="input-field"
-                  />
-                </div>
-
-                <div>
-                  <p className="text-xs text-gray-500">Email</p>
-                  <input
-                    type="email"
-                    name="email"
-                    value={updatedProfile.email}
-                    onChange={handleChange}
-                    className="input-field"
-                  />
-                </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <p className="text-xs text-gray-500">Nama</p>
+                <input
+                  type="text"
+                  name="name"
+                  value={updatedProfile.name}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm shadow-sm"
+                />
               </div>
-              <div className="mt-4 flex gap-3">
-                <button type="submit" className="save-button">Simpan Perubahan</button>
-                <button type="button" onClick={() => setEditMode(false)} className="cancel-button">Batal</button>
+              <div>
+                <p className="text-xs text-gray-500">Email</p>
+                <p className="font-medium text-sm text-gray-700">
+                  {profile.email}
+                </p>
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Simpan
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditMode(false)}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all"
+                >
+                  Batal
+                </button>
               </div>
             </form>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div>
                 <p className="text-xs text-gray-500">Nama</p>
-                <p className="font-medium">{profile.name}</p>
+                <p className="font-medium text-gray-800">{profile.name}</p>
               </div>
-
               <div>
                 <p className="text-xs text-gray-500">Email</p>
-                <p className="font-medium">{profile.email}</p>
+                <p className="font-medium text-gray-800">{profile.email}</p>
               </div>
-
-              <button onClick={() => setEditMode(true)} className="edit-button">Edit Profil</button>
+              <button
+                onClick={() => setEditMode(true)}
+                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition-all duration-200 transform hover:scale-[1.02]"
+              >
+                Edit Profil
+              </button>
             </div>
           )}
         </div>
 
-        {/* Logout Button */}
-        <button
-          onClick={handleLogout}
-          className="w-full mt-8 p-3 border border-red-200 text-red-500 rounded-lg font-medium"
-        >
-          Keluar
-        </button>
+        {/* Tombol Logout */}
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={handleLogout}
+            className="w-full max-w-2xl p-3 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 font-medium transition-all"
+          >
+            Keluar
+          </button>
+        </div>
       </motion.div>
     </div>
   );

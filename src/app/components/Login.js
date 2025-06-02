@@ -153,9 +153,9 @@ export default function LoginForm() {
 
             <div className="text-center mt-2 mb-10">
               <p className="text-sm text-gray-600">
-                Sudah punya akun?{" "}
+                Belum punya akun?{" "}
                 <Link href="/register" className="text-gray-800 font-medium hover:underline">
-                  Masuk
+                  Daftar
                 </Link>
               </p>
             </div>
