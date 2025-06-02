@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import Search from "@/app/components/Home/Search";
 import Tab from "@/app/components/Home/Tab";
 import Banner from "@/app/components/Home/Banner";
-import ProductDetailPopup from "@/app/components/ProductDetailPopup";
 import Card from "@/app/components/Home/Card";
 
 export default function Home({ products, activeTab }) {
@@ -36,13 +35,6 @@ export default function Home({ products, activeTab }) {
 
       {/* Content */}
       <Card activePage={activeTab} filteredProducts={products} />
-
-      {selectedProduct && (
-        <ProductDetailPopup
-          productId={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
     </div>
   );
 }

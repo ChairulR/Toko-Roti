@@ -163,21 +163,21 @@ export default function ProfilePage({ user }) {
                 <p className="text-xs text-gray-500">Email</p>
                 <p className="font-medium text-gray-800">{profile.email}</p>
               </div>
-              <button
-                onClick={() => setEditMode(true)}
-                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition-all duration-200 transform hover:scale-[1.02]"
-              >
-                Edit Profil
-              </button>
             </div>
           )}
         </div>
 
         {/* Tombol Logout */}
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-6 gap-20">
+          <button
+            onClick={() => setEditMode(true)}
+            className="px-7 py-3 bg-black text-white rounded-lg hover:bg-gray-900 transition-all duration-200 transform hover:scale-[1.02]"
+            >
+            Edit Profil
+          </button>
           <button
             onClick={handleLogout}
-            className="w-full max-w-2xl p-3 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 font-medium transition-all"
+            className="justify-start px-10 py-3 p-3 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 font-medium transition-all"
           >
             Keluar
           </button>
