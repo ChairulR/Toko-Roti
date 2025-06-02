@@ -15,7 +15,7 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true)
   const [count, setCount] = useState(1)
   const [note, setNote] = useState("")
-    const [comment, setComment] = useState("")
+  const [comment, setComment] = useState("")
   const id = Number.parseInt(params.id, 10)
 
   const fetching = async () => {
