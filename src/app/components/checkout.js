@@ -11,7 +11,7 @@ export default function CheckoutPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { data: session } = useSession()
-
+  const [showQRISModal, setShowQRISModal] = useState(false);
   const id = parseInt(searchParams.get("id"), 10)
   const quantity = parseInt(searchParams.get("quantity"), 10)
   const note = searchParams.get("note") || ""
@@ -48,20 +48,20 @@ export default function CheckoutPage() {
   }, [id, quantity, session])
 
   const handleCheckout = async () => {
-    if (!user || !product) return
+    if (!user || !product) return;
     try {
-      const result = await createOrder(user.id, id, quantity, paymentMethod)
+      const result = await createOrder(user.id, id, quantity, paymentMethod);
       if (result.success) {
         if (paymentMethod === "QRIS") {
-          router.push(`/order/payment/qris?id=${id}`)
+          setShowQRISModal(true); // tampilkan modal QR
         } else {
-          router.push(`/order/history`)
+          router.push(`/order/history`);
         }
       }
     } catch (error) {
-      console.error("Checkout error:", error)
+      console.error("Checkout error:", error);
     }
-  }
+  };
 
   if (!id || !quantity || isNaN(id) || isNaN(quantity)) {
     return <p className="p-4 text-red-500">Parameter tidak valid.</p>
@@ -132,10 +132,48 @@ export default function CheckoutPage() {
           </button>
         </div>
       </section>
+        {showQRISModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl p-6 shadow-lg w-80 relative">
+              <button
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                onClick={() => setShowQRISModal(false)}
+              >
+                ✖
+              </button>
+              <h2 className="text-lg font-bold text-center mb-2">🔗 Pembayaran QRIS</h2>
+              <p className="text-sm text-center mb-4 text-gray-600">
+                Scan kode QR berikut untuk menyelesaikan pembayaran.
+              </p>
+              <img
+                src={`/api/generateQR?orderId=${id}`}
+                alt="QRIS Payment"
+                className="mx-auto w-48 h-48"
+              />
+              <p className="text-center text-sm font-medium text-gray-800 mt-4">
+                Total: <span className="font-bold text-blue-600">Rp{totalPrice.toLocaleString()}</span>
+              </p>
+              <button
+              onClick={() => {
+                  setShowQRISModal(false);
+                  router.push("/order/history");
+                }}
+                className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+              >
+                ✅ Saya Sudah Membayar
+              </button>
+
+              <p className="text-xs text-center mt-4 text-gray-500">
+                Pastikan untuk menyelesaikan pembayaran sebelum menutup popup ini.
+              </p>
+            </div>
+          </div>
+        )}
 
       <button className="checkout-btn" onClick={handleCheckout}>
         Lanjutkan Pembayaran
       </button>
     </div>
   )
+
 }
