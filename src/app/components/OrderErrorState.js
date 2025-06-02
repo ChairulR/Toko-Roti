@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 export default function OrderErrorState({ type = "not-found" }) {
   const getErrorContent = () => {
@@ -6,7 +6,12 @@ export default function OrderErrorState({ type = "not-found" }) {
       case "no-user":
         return {
           icon: (
-            <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-16 h-16 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -19,11 +24,16 @@ export default function OrderErrorState({ type = "not-found" }) {
           description: "Please log in to view your orders",
           action: "Sign In",
           actionColor: "bg-blue-500 hover:bg-blue-600",
-        }
+        };
       case "no-orders":
         return {
           icon: (
-            <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-16 h-16 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -36,11 +46,16 @@ export default function OrderErrorState({ type = "not-found" }) {
           description: "You haven't placed any orders yet",
           action: "Start Shopping",
           actionColor: "bg-green-500 hover:bg-green-600",
-        }
+        };
       case "permission-denied":
         return {
           icon: (
-            <svg className="w-16 h-16 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-16 h-16 text-red-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -53,11 +68,16 @@ export default function OrderErrorState({ type = "not-found" }) {
           description: "You don't have permission to view this order",
           action: "Go Back",
           actionColor: "bg-gray-500 hover:bg-gray-600",
-        }
+        };
       case "server-error":
         return {
           icon: (
-            <svg className="w-16 h-16 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-16 h-16 text-orange-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -70,11 +90,39 @@ export default function OrderErrorState({ type = "not-found" }) {
           description: "Unable to load order data. Please try again later",
           action: "Retry",
           actionColor: "bg-orange-500 hover:bg-orange-600",
-        }
+        };
+      case "hash-review":
+        return {
+          icon: (
+            <svg
+              className="w-16 h-16 text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          ),
+          title: "Order Already Reviewed",
+          description: "This order has already been reviewed previously.",
+          action: "View Review",
+          actionColor: "bg-blue-500 hover:bg-blue-600",
+        };
+  
       default:
         return {
           icon: (
-            <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-16 h-16 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -84,14 +132,15 @@ export default function OrderErrorState({ type = "not-found" }) {
             </svg>
           ),
           title: "Order Not Found",
-          description: "The order you're looking for doesn't exist or has been removed",
+          description:
+            "The order you're looking for doesn't exist or has been removed",
           action: "View All Orders",
           actionColor: "bg-blue-500 hover:bg-blue-600",
-        }
+        };
     }
-  }
+  };
 
-  const content = getErrorContent()
+  const content = getErrorContent();
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -104,10 +153,14 @@ export default function OrderErrorState({ type = "not-found" }) {
           </div>
 
           {/* Title */}
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">{content.title}</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-3">
+            {content.title}
+          </h1>
 
           {/* Description */}
-          <p className="text-gray-600 mb-8 leading-relaxed">{content.description}</p>
+          <p className="text-gray-600 mb-8 leading-relaxed">
+            {content.description}
+          </p>
 
           {/* Action Button */}
           <button
@@ -117,23 +170,23 @@ export default function OrderErrorState({ type = "not-found" }) {
               switch (type) {
                 case "no-user":
                   // Redirect to sign in
-                  window.location.href = "/login"
-                  break
+                  window.location.href = "/login";
+                  break;
                 case "no-orders":
                   // Redirect to shop
-                  window.location.href = "/"
-                  break
+                  window.location.href = "/";
+                  break;
                 case "permission-denied":
                   // Go back
-                  window.history.back()
-                  break
+                  window.history.back();
+                  break;
                 case "server-error":
                   // Reload page
-                  window.location.reload()
-                  break
+                  window.location.reload();
+                  break;
                 default:
                   // Go to orders page
-                  window.location.href = "/order/history"
+                  window.location.href = "/order/history";
               }
             }}
           >
@@ -152,9 +205,11 @@ export default function OrderErrorState({ type = "not-found" }) {
         {/* Help Section */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-500 mb-2">Need help?</p>
-          <button className="text-blue-500 hover:text-blue-600 text-sm font-medium">Contact Support</button>
+          <button className="text-blue-500 hover:text-blue-600 text-sm font-medium">
+            Contact Support
+          </button>
         </div>
       </div>
     </div>
-  )
+  );
 }

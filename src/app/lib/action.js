@@ -109,10 +109,9 @@ export const getUserById = async (id) => {
                 comments: true,
               },
             },
-            comments: true
+            comments: true,
           },
         },
-
       },
     });
     if (!user) {
@@ -144,7 +143,6 @@ export const getUserById = async (id) => {
     console.error("Error fetching user by ID:", error);
   }
 };
-
 
 /**
  * Retrieves products filtered by search query and flavor.
@@ -203,7 +201,7 @@ export const getProductById = async (id) => {
       where: {
         id: id,
       },
-      
+
       include: {
         comments: {
           include: {
@@ -211,17 +209,18 @@ export const getProductById = async (id) => {
               select: {
                 id: true,
                 name: true,
-                comments: true
+                comments: true,
               },
             },
           },
-        
         },
       },
     });
     const ratings = product.comments.map((c) => c.rate);
     const totalRating = ratings.reduce((sum, r) => sum + r, 0);
-    const averageRating = ratings.length ? (totalRating / ratings.length).toFixed(1) : null;
+    const averageRating = ratings.length
+      ? (totalRating / ratings.length).toFixed(1)
+      : null;
     const reviewCount = ratings.length;
 
     if (!product) {
@@ -266,8 +265,8 @@ export const getOrderById = async (orderId, userId) => {
   try {
     const order = await prisma.order.findUnique({
       where: {
-        id: Number(orderId),
-        userId: Number(userId),
+        id: orderId,
+        userId: userId,
       },
       include: {
         product: {
@@ -283,6 +282,16 @@ export const getOrderById = async (orderId, userId) => {
           select: {
             id: true,
             name: true,
+          },
+        },
+        comments: {
+          select: {
+            id: true,
+            content: true,
+            rate: true,
+            createdAt: true,
+            updatedAt: true,
+            userId: true,
           },
         },
       },
@@ -310,13 +319,13 @@ export const getOrderById = async (orderId, userId) => {
           name: order.product.name,
           image: order.product.image,
           price: order.product.price,
-          image: order.product.image,
           flavor: order.product.flavor,
         },
         user: {
           id: order.user.id,
           name: order.user.name,
         },
+        comments: order.comments, // Komentar terkait order
       },
     };
   } catch (error) {
@@ -329,16 +338,19 @@ export const getOrderById = async (orderId, userId) => {
   }
 };
 
-export const createComment = async (productId, userId, rate, comment) => {
-  try {
 
+export const createComment = async (productId, userId, rate, orderId ,comment) => {
+  try {
     const ratingValue = rate;
     if (ratingValue < 1 || ratingValue > 5) {
       return { success: false, message: "Rating harus antara 1 hingga 5" };
     }
 
     if (!comment || comment.length > 500) {
-      return { success: false, message: "Komentar harus diisi dan maksimal 500 karakter" };
+      return {
+        success: false,
+        message: "Komentar harus diisi dan maksimal 500 karakter",
+      };
     }
 
     const newComment = await prisma.comment.create({
@@ -346,6 +358,7 @@ export const createComment = async (productId, userId, rate, comment) => {
         productId: productId,
         userId: userId,
         rate: ratingValue,
+        orderId: orderId,
         content: comment,
       },
     });
@@ -354,7 +367,6 @@ export const createComment = async (productId, userId, rate, comment) => {
       where: {
         productId,
         userId,
-        rating: null, // hanya update order yang belum punya rating
       },
       data: {
         rating: ratingValue,
@@ -376,7 +388,10 @@ export const createComment = async (productId, userId, rate, comment) => {
     };
   } catch (error) {
     console.error("Error creating comment:", error);
-    return { success: false, message: "Terjadi kesalahan saat menyimpan komentar" };
+    return {
+      success: false,
+      message: "Terjadi kesalahan saat menyimpan komentar",
+    };
   }
 };
 
@@ -384,9 +399,9 @@ export const createOrder = async (userId, productId, qty, paymentMethod) => {
   try {
     const order = await prisma.order.create({
       data: {
-        userId: (userId),
-        productId: (productId),
-        qty: (qty),
+        userId: userId,
+        productId: productId,
+        qty: qty,
         status: "PROCESS",
         payment: paymentMethod,
       },

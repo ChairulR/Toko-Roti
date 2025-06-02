@@ -3,11 +3,13 @@
 import { formatterCurrency } from "@/app/lib/utils";
 import { useState } from "react";
 import { createComment } from "../lib/action";
+import { useRouter } from "next/navigation";
 
-export default function RatingReviewPage({ product, userId }) {
+export default function RatingReviewPage({ product,orderId ,userId }) {
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [review, setReview] = useState("");
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleStarClick = (starIndex) => {
@@ -31,9 +33,10 @@ export default function RatingReviewPage({ product, userId }) {
     setIsSubmitting(true);
     try {
       const response = await createComment(
-        parseInt(product.id),
-        parseInt(userId),
-        parseInt(rating),
+        parseInt(product.id, 10),
+        parseInt(userId, 10),
+        parseInt(rating, 10),
+        parseInt(orderId, 10),
         review
       );
 
