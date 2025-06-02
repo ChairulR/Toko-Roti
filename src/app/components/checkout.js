@@ -1,53 +1,57 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import Loading from "@/app/components/loading";
-import { useRouter } from "next/navigation";
-import { getProductById } from "@/app/lib/action";
-export default function CheckoutPage({quantity = 1, note = "", id}) {
-  const router = useRouter();
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [paymentMethod, setPaymentMethod] = useState("QRIS");
+import { useEffect, useState } from "react"
+import Image from "next/image"
+import Loading from "@/app/components/loading"
+import { useRouter, useSearchParams } from "next/navigation"
+import { getProductById } from "@/app/lib/action"
+
+export default function CheckoutPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const id = parseInt(searchParams.get("id"), 10)
+  const quantity = parseInt(searchParams.get("quantity"), 10) 
+  const note = searchParams.get("note") || ""
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [totalPrice, setTotalPrice] = useState(0)
+  const [paymentMethod, setPaymentMethod] = useState("QRIS")
 
   useEffect(() => {
     async function fetchProduct() {
-      setLoading(true);
+      setLoading(true)
       try {
-
-        const result = await getProductById(id);
+        const result = await getProductById(id)
         if (result.success) {
-          setProduct(result.data);
-          setTotalPrice(result.data.price * quantity);
+          setProduct(result.data)
+          setTotalPrice(result.data.price * quantity)
         }
       } catch (error) {
-        console.error("Error fetching product:", error);
+        console.error("Error fetching product:", error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
 
     if (id) {
-      fetchProduct();
+      fetchProduct()
     }
-  }, [id, quantity]);
+  }, [id, quantity])
 
   const handleCheckout = async () => {
-    const { createOrder } = await import("@/app/lib/action");
-    const result = await createOrder(1, parseInt(id), parseInt(quantity), paymentMethod);
+    const { createOrder } = await import("@/app/lib/action")
+    const result = await createOrder(1, id, quantity, paymentMethod)
     if (result.success) {
       if (paymentMethod === "QRIS") {
-        router.push(`/order/payment/qris?id=${id}`);
+        router.push(`/order/payment/qris?id=${id}`)
       } else {
-        router.push(`/order/history`);
+        router.push(`/order/history`)
       }
     }
-  };
+  }
 
-  if (loading) return <Loading message="Memuat produk..." />;
-  if (!product) return <p className="p-4 text-red-500">Produk tidak ditemukan.</p>;
+  if (loading) return <Loading message="Memuat produk..." />
+  if (!product) return <p className="p-4 text-red-500">Produk tidak ditemukan.</p>
 
   return (
     <div className="checkout-page">
@@ -59,10 +63,20 @@ export default function CheckoutPage({quantity = 1, note = "", id}) {
       <div className="checkout-card">
         <Image src={`/images/${product.image}`} alt={product.name} width={100} height={100} className="checkout-img" />
         <div className="checkout-info">
-          <p className="font-semibold">📌 <strong>{product.name}</strong></p>
-          <p className="text-sm text-gray-600">🍞 Rasa: <span className="highlight">{product.flavor}</span></p>
-          <p className="text-sm text-gray-600">📦 Jumlah: <span className="highlight">{quantity} item</span></p>
-          {note && <p className="text-sm text-gray-600">📝 Catatan: <span className="highlight">{note}</span></p>}
+          <p className="font-semibold">
+            📌 <strong>{product.name}</strong>
+          </p>
+          <p className="text-sm text-gray-600">
+            🍞 Rasa: <span className="highlight">{product.flavor}</span>
+          </p>
+          <p className="text-sm text-gray-600">
+            📦 Jumlah: <span className="highlight">{quantity} item</span>
+          </p>
+          {note && (
+            <p className="text-sm text-gray-600">
+              📝 Catatan: <span className="highlight">{note}</span>
+            </p>
+          )}
         </div>
       </div>
 
@@ -96,8 +110,9 @@ export default function CheckoutPage({quantity = 1, note = "", id}) {
         </div>
       </section>
 
-      <button className="checkout-btn" onClick={handleCheckout}>Lanjutkan Pembayaran</button>
+      <button className="checkout-btn" onClick={handleCheckout}>
+        Lanjutkan Pembayaran
+      </button>
     </div>
-  );
+  )
 }
-

@@ -205,9 +205,11 @@ export const getProductById = async (id) => {
               select: {
                 id: true,
                 name: true,
+                comments: true
               },
             },
           },
+        
         },
       },
     });
