@@ -105,7 +105,7 @@ export default function ProductDetailPage() {
 
         <div className="flex items-center mt-3 text-sm text-gray-500">
           <span className="text-yellow-500">
-            ★ {product.averageRating ?? "-"} ({product.reviewCount} ulasan)
+            ★ {product.averageRating ? parseFloat(product.averageRating).toFixed(1) : "-"} ({product.reviewCount} ulasan)
           </span>
         </div>
 

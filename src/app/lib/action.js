@@ -23,7 +23,6 @@ const registerSchema = z.object({
     .string()
     .min(8, { message: "Password must be at least 8 characters long" }),
 });
-
 /**
  * Server action to register a new user.
  *
@@ -198,6 +197,7 @@ export const getProductById = async (id) => {
       where: {
         id: id,
       },
+      
       include: {
         comments: {
           include: {
@@ -213,6 +213,11 @@ export const getProductById = async (id) => {
         },
       },
     });
+    const ratings = product.comments.map((c) => c.rate);
+    const totalRating = ratings.reduce((sum, r) => sum + r, 0);
+    const averageRating = ratings.length ? (totalRating / ratings.length).toFixed(1) : null;
+    const reviewCount = ratings.length;
+
     if (!product) {
       return {
         success: false,
@@ -230,6 +235,8 @@ export const getProductById = async (id) => {
         price: product.price,
         image: product.image,
         flavor: product.flavor,
+        averageRating,
+        reviewCount,
         comments: product.comments.map((comment) => ({
           id: comment.id,
           userId: comment.userId,
@@ -334,6 +341,18 @@ export const createComment = async (productId, userId, rate, comment) => {
         userId: userId,
         rate: ratingValue,
         content: comment,
+      },
+    });
+
+    await prisma.order.updateMany({
+      where: {
+        productId,
+        userId,
+        rating: null, // hanya update order yang belum punya rating
+      },
+      data: {
+        rating: ratingValue,
+        notes: comment,
       },
     });
 
