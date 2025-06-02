@@ -41,8 +41,7 @@ export default function CheckoutPage() {
 
   const handleCheckout = async () => {
     const { createOrder } = await import("@/app/lib/action");
-    const result = await createOrder(1, id, quantity, paymentMethod);
-
+    const result = await createOrder(1, parseInt(id), parseInt(quantity), paymentMethod);
     if (result.success) {
       if (paymentMethod === "QRIS") {
         router.push(`/order/payment/qris?id=${id}`);
