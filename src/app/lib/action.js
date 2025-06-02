@@ -125,6 +125,7 @@ export const getUserById = async (id) => {
         id: order.id,
         status: order.status,
         qty: order.qty,
+        payment: order.payment,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
         comments: order.comments,
@@ -402,7 +403,7 @@ export const createOrder = async (userId, productId, qty, paymentMethod) => {
         userId: userId,
         productId: productId,
         qty: qty,
-        status: "PROCESS",
+        status: "PURCHASED",
         payment: paymentMethod,
       },
     });

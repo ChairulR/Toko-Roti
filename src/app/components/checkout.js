@@ -87,17 +87,17 @@ export default function CheckoutPage() {
         />
         <div className="checkout-info">
           <p className="font-semibold">
-            📌 <strong>{product.name}</strong>
+            <strong>{product.name}</strong>
           </p>
           <p className="text-sm text-gray-600">
-            🍞 Rasa: <span className="highlight">{product.flavor}</span>
+            Rasa: <span className="highlight">{product.flavor}</span>
           </p>
           <p className="text-sm text-gray-600">
-            📦 Jumlah: <span className="highlight">{quantity} item</span>
+           Jumlah: <span className="highlight">{quantity} item</span>
           </p>
           {note && (
             <p className="text-sm text-gray-600">
-              📝 Catatan: <span className="highlight">{note}</span>
+              Catatan: <span className="highlight">{note}</span>
             </p>
           )}
         </div>
@@ -105,18 +105,18 @@ export default function CheckoutPage() {
 
       <div className="checkout-summary">
         <div className="flex justify-between w-full px-6 mb-2">
-          <span className="text-sm text-gray-600">💰 Harga per item</span>
+          <span className="text-sm text-gray-600">Harga per item</span>
           <span className="text-sm">Rp{product.price.toLocaleString()}</span>
         </div>
         <div className="flex justify-between w-full px-6 font-semibold">
-          <span>💳 Total ({quantity} item)</span>
+          <span>Total ({quantity} item)</span>
           <span>Rp{totalPrice.toLocaleString()}</span>
         </div>  
       </div>
 
       {/* Pilih Metode Pembayaran */}
       <section className="payment-method">
-        <h3 className="payment-title">🛍 Pilih Metode Pembayaran</h3>
+        <h3 className="payment-title">Pilih Metode Pembayaran</h3>
         <div className="payment-options">
           <button
             className={`payment-btn ${paymentMethod === "QRIS" ? "selected" : ""}`}
