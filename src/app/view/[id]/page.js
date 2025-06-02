@@ -48,15 +48,28 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-white;">
       {/* Gambar Produk */}
-      <div className="relative w-full aspect-[10/3]">
-        <Image
-          src={`/images/${product.image}`}
-          alt={product.name}
-          fill
-          className="object-center"
-        />
-      </div>
 
+        <div className="relative w-full aspect-[4/3] md:aspect-[3/2]">
+          {/* Tombol kembali */}
+          <button
+            onClick={() => router.back()}
+            className="absolute top-4 left-4 bg-white/70 hover:bg-white/90 backdrop-blur p-2 rounded-full shadow"
+          >
+            <span className="text-lg">❌</span>
+            {/* atau ganti dengan: ⬅️ atau pakai ikon lucide */}
+          </button>
+
+          {/* Gambar Produk */}
+          <Image
+            src={`/images/${product.image}`}
+            alt={product.name}
+            fill
+            className="object-cover rounded-b-2xl"
+            priority
+          />
+        </div>
+
+        
       {/* Konten Produk */}
       <div className="px-4 pt-4 pb-32">
         <p className="text-sm text-gray-500">{product.flavor}</p>
@@ -132,22 +145,20 @@ export default function ProductDetailPage() {
       </div>
 
     {/* Tombol Beli Sekarang */}
-      <div className="bottom-4 mb-12 left-4 right-4 z-50">
+      <div className="sticky bottom-0 z-35 bg-white px-4 pt-4 pb-6 border-t">
         <div className="bg-white rounded-lg shadow-lg p-4 flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <span className="text-gray-600 text-sm">Total</span>
-            <span className="text-lg font-bold">
-              Rp{totalPrice.toLocaleString()}
-          </span>
+            <span className="text-lg font-bold">Rp{totalPrice.toLocaleString()}</span>
+          </div>
+          <button
+            className="w-full py-3 bg-black text-white rounded-lg font-semibold"
+            onClick={fetchOrder}
+          >
+            Beli Sekarang
+          </button>
         </div>
-        <button
-          className="checkout-btn"
-          onClick={fetchOrder}
-        >
-          Beli Sekarang
-        </button>
       </div>
-    </div>
     </div>
   );
 }

@@ -12,9 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`antialiased`}
-      >
+      <body className="relative min-h-screen pb-20">
         {children}
         <Navigation/>
       </body>
