@@ -46,7 +46,7 @@ export default function RatingReviewPage({ product,orderId ,userId }) {
 
       setReview("");
       alert("Review submitted successfully!");
-      router.push("/order/history"); // ✅ Redirect setelah review
+      router.push("/order/history"); 
     } catch (error) {
       console.error("Error submitting review:", error);
       alert("Failed to submit review. Please try again.");
