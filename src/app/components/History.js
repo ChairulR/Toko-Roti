@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Loading from "@/app/components/loading";
 import Link from "next/link";
 import { getUserById } from "@/app/lib/action";
+import { formatterCurrency } from "../lib/utils";
 
 export default function HistoryPage({ userId }) {
   const [history, setHistory] = useState([]);
@@ -14,6 +15,7 @@ export default function HistoryPage({ userId }) {
       setLoading(true);
       try {
         const result = await getUserById(userId);
+        console.log("Fetched user history:", result);
         if (result && result.orders) {
           setHistory(result.orders);
         }
@@ -29,7 +31,11 @@ export default function HistoryPage({ userId }) {
 
   if (loading) return <Loading message="Loading history" />;
   if (history.length === 0)
-    return <p className="text-center text-gray-500 mt-10">Belum ada riwayat pembelian.</p>;
+    return (
+      <p className="text-center text-gray-500 mt-10">
+        Belum ada riwayat pembelian.
+      </p>
+    );
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
@@ -49,32 +55,37 @@ export default function HistoryPage({ userId }) {
             </div>
 
             <div className="text-sm text-gray-700">
-              <p>Status: <span className="font-medium">{order.status}</span></p>
-              <p>Harga: Rp{order.product.price.toLocaleString()}</p>
+              <p>
+                Status: <span className="font-medium">{order.status}</span>
+              </p>
+              <p>Harga: Rp{formatterCurrency.format(order.product.price)}</p>
               <p className="mt-1">
-                💰 Total: <strong>Rp{order.product.price.toLocaleString()}</strong>
+                💰 Total:{" "}
+                <strong>
+                  Rp{formatterCurrency.format(order.product.price * order.qty)}
+                </strong>
               </p>
             </div>
-
-            {order.rating !== null && (
+            {order.comments && order.comments.length > 0 ? (
               <div className="mt-2 text-sm text-gray-600">
-                <p>⭐ {order.rating} / 5</p>
-                {order.notes && <p className="italic">"{order.notes}"</p>}
+                <p>⭐ {order.comments[0].rate} / 5</p>
+                {order.comments[0].content && (
+                  <p className="italic">"{order.comments[0].content}"</p>
+                )}
+                <span className="text-green-600 text-sm">
+                  ✅ Sudah direview
+                </span>
               </div>
-            )}
-
-            <div className="mt-3">
-              {order.rating === null ? (
+            ) : (
+              <div className="mt-3">
                 <Link
                   href={`/order/review/${order.id}`}
                   className="text-blue-600 hover:underline text-sm"
                 >
                   ⭐ Beri Rating
                 </Link>
-              ) : (
-                <span className="text-green-600 text-sm">✅ Sudah direview</span>
-              )}
-            </div>
+              </div>
+            )}
           </li>
         ))}
       </ul>

@@ -106,10 +106,13 @@ export const getUserById = async (id) => {
                 price: true,
                 image: true,
                 flavor: true,
+                comments: true,
               },
             },
+            comments: true
           },
         },
+
       },
     });
     if (!user) {
@@ -122,8 +125,10 @@ export const getUserById = async (id) => {
       orders: user.orders.map((order) => ({
         id: order.id,
         status: order.status,
+        qty: order.qty,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
+        comments: order.comments,
         product: {
           id: order.product.id,
           name: order.product.name,
@@ -139,6 +144,7 @@ export const getUserById = async (id) => {
     console.error("Error fetching user by ID:", error);
   }
 };
+
 
 /**
  * Retrieves products filtered by search query and flavor.

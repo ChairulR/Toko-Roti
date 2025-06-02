@@ -4,24 +4,35 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import Loading from "@/app/components/loading"
 import { useRouter, useSearchParams } from "next/navigation"
-import { getProductById } from "@/app/lib/action"
+import { getProductById, getUserById, createOrder } from "@/app/lib/action"
+import { useSession } from "next-auth/react"
 
 export default function CheckoutPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { data: session } = useSession()
+
   const id = parseInt(searchParams.get("id"), 10)
-  const quantity = parseInt(searchParams.get("quantity"), 10) 
+  const quantity = parseInt(searchParams.get("quantity"), 10)
   const note = searchParams.get("note") || ""
+
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [totalPrice, setTotalPrice] = useState(0)
+  const [user, setUser] = useState(null)
   const [paymentMethod, setPaymentMethod] = useState("QRIS")
 
   useEffect(() => {
     async function fetchProduct() {
+      if (!session || !session.user) return
+      if (!id || !quantity || isNaN(id) || isNaN(quantity)) return
+
       setLoading(true)
       try {
         const result = await getProductById(id)
+        const u = await getUserById(session.user.id)
+        setUser(u)
+
         if (result.success) {
           setProduct(result.data)
           setTotalPrice(result.data.price * quantity)
@@ -33,21 +44,27 @@ export default function CheckoutPage() {
       }
     }
 
-    if (id) {
-      fetchProduct()
-    }
-  }, [id, quantity])
+    fetchProduct()
+  }, [id, quantity, session])
 
   const handleCheckout = async () => {
-    const { createOrder } = await import("@/app/lib/action")
-    const result = await createOrder(1, id, quantity, paymentMethod)
-    if (result.success) {
-      if (paymentMethod === "QRIS") {
-        router.push(`/order/payment/qris?id=${id}`)
-      } else {
-        router.push(`/order/history`)
+    if (!user || !product) return
+    try {
+      const result = await createOrder(user.id, id, quantity, paymentMethod)
+      if (result.success) {
+        if (paymentMethod === "QRIS") {
+          router.push(`/order/payment/qris?id=${id}`)
+        } else {
+          router.push(`/order/history`)
+        }
       }
+    } catch (error) {
+      console.error("Checkout error:", error)
     }
+  }
+
+  if (!id || !quantity || isNaN(id) || isNaN(quantity)) {
+    return <p className="p-4 text-red-500">Parameter tidak valid.</p>
   }
 
   if (loading) return <Loading message="Memuat produk..." />
@@ -61,7 +78,13 @@ export default function CheckoutPage() {
       </div>
 
       <div className="checkout-card">
-        <Image src={`/images/${product.image}`} alt={product.name} width={100} height={100} className="checkout-img" />
+        <Image
+          src={`/images/${product.image}`}
+          alt={product.name}
+          width={100}
+          height={100}
+          className="checkout-img"
+        />
         <div className="checkout-info">
           <p className="font-semibold">
             📌 <strong>{product.name}</strong>
