@@ -196,7 +196,7 @@ export const getProductById = async (id) => {
   try {
     const product = await prisma.product.findUnique({
       where: {
-        id: Number(id),
+        id: id,
       },
       include: {
         comments: {

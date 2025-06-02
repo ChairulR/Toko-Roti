@@ -6,15 +6,14 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ProductDetailPage() {
+  const router = useRouter();
+  const params = useParams();
   const [product, setProduct] = useState();
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(1);
   const [note, setNote] = useState("");
-
-  const params = useParams();
-  const id = params.id;
-  const router = useRouter();
+  const id = parseInt(params.id, 10);
 
   const fetching = async () => {
     setLoading(true);
@@ -34,7 +33,9 @@ export default function ProductDetailPage() {
 
   const fetchOrder = () => {
     const encodedNote = encodeURIComponent(note);
-    router.push(`/order/checkout?id=${id}&quantity=${count}&note=${encodedNote}`);
+    router.push(
+      `/order/checkout?id=${id}&quantity=${count}&note=${encodedNote}`
+    );
   };
 
   useEffect(() => {
@@ -49,34 +50,35 @@ export default function ProductDetailPage() {
     <div className="min-h-screen bg-white;">
       {/* Gambar Produk */}
 
-        <div className="relative w-full aspect-[4/3] md:aspect-[3/2]">
-          {/* Tombol kembali */}
-          <button
-            onClick={() => router.back()}
-            className="absolute top-4 left-4 bg-white/70 hover:bg-white/90 backdrop-blur p-2 rounded-full shadow"
-          >
-            <span className="text-lg">❌</span>
-            {/* atau ganti dengan: ⬅️ atau pakai ikon lucide */}
-          </button>
+      <div className="relative w-full aspect-[4/3] md:aspect-[3/2]">
+        {/* Tombol kembali */}
+        <button
+          onClick={() => router.back()}
+          className="absolute top-4 left-4 bg-white/70 hover:bg-white/90 backdrop-blur p-2 rounded-full shadow"
+        >
+          <span className="text-lg">❌</span>
+          {/* atau ganti dengan: ⬅️ atau pakai ikon lucide */}
+        </button>
 
-          {/* Gambar Produk */}
-          <Image
-            src={`/images/${product.image}`}
-            alt={product.name}
-            fill
-            className="object-cover rounded-b-2xl"
-            priority
-          />
-        </div>
+        {/* Gambar Produk */}
+        <Image
+          src={`/images/${product.image}`}
+          alt={product.name}
+          fill
+          className="object-cover rounded-b-2xl"
+          priority
+        />
+      </div>
 
-        
       {/* Konten Produk */}
       <div className="px-4 pt-4 pb-32">
         <p className="text-sm text-gray-500">{product.flavor}</p>
 
         <div className="flex justify-between items-center mt-1">
           <h2 className="text-xl font-bold">{product.name}</h2>
-          <p className="font-bold text-lg">Rp{product.price.toLocaleString()}</p>
+          <p className="font-bold text-lg">
+            Rp{product.price.toLocaleString()}
+          </p>
         </div>
 
         {/* Quantity */}
@@ -121,7 +123,8 @@ export default function ProductDetailPage() {
               <div key={c.id} className="mb-3 border-b pb-2">
                 <p className="font-medium">{c.userName}</p>
                 <p className="text-yellow-500 text-sm">
-                  {"★".repeat(c.rate)} <span className="text-gray-500">({c.rate})</span>
+                  {"★".repeat(c.rate)}{" "}
+                  <span className="text-gray-500">({c.rate})</span>
                 </p>
                 <p className="text-sm text-gray-700">{c.content}</p>
               </div>
@@ -144,12 +147,14 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-    {/* Tombol Beli Sekarang */}
+      {/* Tombol Beli Sekarang */}
       <div className="sticky bottom-0 z-35 bg-white px-4 pt-4 pb-6 border-t">
         <div className="bg-white rounded-lg shadow-lg p-4 flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <span className="text-gray-600 text-sm">Total</span>
-            <span className="text-lg font-bold">Rp{totalPrice.toLocaleString()}</span>
+            <span className="text-lg font-bold">
+              Rp{totalPrice.toLocaleString()}
+            </span>
           </div>
           <button
             className="w-full py-3 bg-black text-white rounded-lg font-semibold"
