@@ -13,6 +13,9 @@ async function page({ params }) {
       return <OrderErrorState type="no-user" />;
     }
     const userId = session.user.id;
+    if(session.user.id) {
+      
+    }
     const order = await getOrderById(id, userId);
     if (!order || order.status === false || !order.data) {
       return <OrderErrorState type="no-orders" />;
