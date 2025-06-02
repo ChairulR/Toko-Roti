@@ -360,7 +360,7 @@ export const createOrder = async (userId, productId, qty, paymentMethod) => {
         userId: (userId),
         productId: (productId),
         qty: (qty),
-        status: "PURCESHED",
+        status: "PROCESS",
         payment: paymentMethod,
       },
     });

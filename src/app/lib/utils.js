@@ -27,7 +27,7 @@ export const getTrackingSteps = (currentStatus) => {
   const steps = [
     {
       id: 1,
-      status: OrderStatus.PURCESHED,
+      status: OrderStatus.PURCHASED,
       title: "Order Purchased",
       subtitle: "Your order has been placed successfully",
     },
@@ -49,7 +49,7 @@ export const getTrackingSteps = (currentStatus) => {
     return [
       {
         id: 1,
-        status: OrderStatus.PURCESHED,
+        status: OrderStatus.PURCHASED,
         title: "Order Purchased",
         subtitle: "Your order was placed",
         completed: true,
@@ -73,7 +73,7 @@ export const getTrackingSteps = (currentStatus) => {
     }))
   }
 
-  const statusOrder = [OrderStatus.PURCESHED, OrderStatus.PROCESS, OrderStatus.COMPLETED]
+  const statusOrder = [OrderStatus.PURCHASED, OrderStatus.PROCESS, OrderStatus.COMPLETED]
   const currentIndex = statusOrder.indexOf(currentStatus)
 
   return steps.map((step, index) => ({
