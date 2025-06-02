@@ -111,7 +111,7 @@ export default function CheckoutPage() {
         <div className="flex justify-between w-full px-6 font-semibold">
           <span>💳 Total ({quantity} item)</span>
           <span>Rp{totalPrice.toLocaleString()}</span>
-        </div>
+        </div>  
       </div>
 
       {/* Pilih Metode Pembayaran */}
@@ -155,7 +155,7 @@ export default function CheckoutPage() {
               </p>
               <button
               onClick={() => {
-                  setShowQRISModal(false);
+                  setShowQRISModal(false);  
                   router.push("/order/history");
                 }}
                 className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition"
