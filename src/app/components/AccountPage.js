@@ -14,7 +14,7 @@ export default function ProfilePage({ user }) {
   const [profile, setProfile] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
-  const [updatedProfile, setUpdatedProfile] = useState({ name: "" });
+  const [updatedProfile, setUpdatedProfile] = useState({ name: "", address: "", password: "" });
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -23,7 +23,7 @@ export default function ProfilePage({ user }) {
         const res = await getUserById(user.id);
         if (res) {
           setProfile(res);
-          setUpdatedProfile({ name: res.name });
+          setUpdatedProfile({ name: res.name, address: res.address, password: "" });
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -44,17 +44,31 @@ export default function ProfilePage({ user }) {
     setUpdatedProfile({ ...updatedProfile, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.put("/api/account", { name: updatedProfile.name });
-      alert("Nama berhasil diperbarui!");
-      setProfile({ ...profile, name: updatedProfile.name });
-      setEditMode(false);
-    } catch (error) {
-      console.error("Gagal memperbarui profil:", error);
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const { updateProfile } = await import("@/app/lib/action");
+
+  const result = await updateProfile({
+    name: updatedProfile.name,
+    address: updatedProfile.address,
+    password: updatedProfile.password,
+  });
+
+  if (result.success) {
+    alert(result.message);
+    setProfile({
+      ...profile,
+      name: updatedProfile.name,
+      address: updatedProfile.address,
+    });
+    setEditMode(false);
+    setUpdatedProfile({ ...updatedProfile, password: "" });
+  } else {
+    alert(result.message || "Terjadi kesalahan");
+  }
+};
+
+
 
   if (isLoading) return <ProfileSkeleton />;
 
@@ -137,6 +151,29 @@ export default function ProfilePage({ user }) {
                   {profile.email}
                 </p>
               </div>
+              <div>
+              <p className="text-xs text-gray-500">Alamat</p>
+              <input
+                type="text"
+                name="address"
+                value={updatedProfile.address}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm shadow-sm"
+                placeholder="Alamat rumah"
+              />
+            </div>
+
+            <div>
+              <p className="text-xs text-gray-500">Password Baru</p>
+              <input
+                type="password"
+                name="password"
+                value={updatedProfile.password}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm shadow-sm"
+                placeholder="Kosongkan jika tidak ingin mengubah"
+              />
+            </div>
               <div className="flex gap-2 pt-2">
                 <button
                   type="submit"
@@ -163,7 +200,12 @@ export default function ProfilePage({ user }) {
                 <p className="text-xs text-gray-500">Email</p>
                 <p className="font-medium text-gray-800">{profile.email}</p>
               </div>
+              <div>
+                <p className="text-xs text-gray-500">Alamat</p>
+                <p className="font-medium text-gray-800">{profile.address || "Belum diisi"}</p>
+              </div>
             </div>
+            
           )}
         </div>
 

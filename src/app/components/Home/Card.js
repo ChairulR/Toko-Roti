@@ -26,7 +26,7 @@ function Card({activePage, filteredProducts}) {
               <div key={item.id} className="card">
                 <img src={`/images/${item.image}`} alt={item.name} />
                   <p className="product-name">{item.name}</p>
-                <p className="price">Rp{item.price}</p>
+                <p className="price">Rp{item.price.toLocaleString()}</p>
               </div>
             </Link>
           ))}
