@@ -12,6 +12,7 @@ model User {
   name      String
   email     String    @unique
   password  String
+  address   String    @default("")
   createdAt DateTime  @default(now())
   isAdmin   Boolean   @default(false)
   updatedAt DateTime  @updatedAt
@@ -65,6 +66,7 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   payment PaymentMethod @default(COD)
+  orderType orderType @default(PICKUP)
 }
 
 enum OrderStatus {
@@ -77,4 +79,9 @@ enum OrderStatus {
 enum PaymentMethod {
   QRIS
   COD
+}
+
+enum orderType {
+  PICKUP
+  DELIVERY
 }
