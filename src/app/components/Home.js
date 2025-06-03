@@ -8,8 +8,6 @@ import Banner from "@/app/components/Home/Banner";
 import Card from "@/app/components/Home/Card";
 
 export default function Home({ products, activeTab }) {
-  const [selectedProduct, setSelectedProduct] = useState();
-
   return (
     <div className="container-home">
       {/* Bagian Welcome */}

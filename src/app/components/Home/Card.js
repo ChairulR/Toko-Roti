@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { formatterCurrency } from "@/app/lib/utils";
 
 function Card({activePage, filteredProducts}) {
   return (
@@ -26,7 +27,7 @@ function Card({activePage, filteredProducts}) {
               <div key={item.id} className="card">
                 <img src={`/images/${item.image}`} alt={item.name} />
                   <p className="product-name">{item.name}</p>
-                <p className="price">Rp{item.price.toLocaleString()}</p>
+                <p className="price">Rp{formatterCurrency.format(item.price)}</p>
               </div>
             </Link>
           ))}

@@ -8,13 +8,14 @@ import axios from "axios";
 import { getUserById } from "../lib/action";
 import { formatDateToDMY } from "../lib/utils";
 import ProfileSkeleton from "./skeleton/Profile-skeleton";
-
+import { updateProfile } from "../lib/action";
 export default function ProfilePage({ user }) {
   const router = useRouter();
   const [profile, setProfile] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [updatedProfile, setUpdatedProfile] = useState({ name: "", address: "", password: "" });
+
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -46,7 +47,6 @@ export default function ProfilePage({ user }) {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-  const { updateProfile } = await import("@/app/lib/action");
 
   const result = await updateProfile({
     name: updatedProfile.name,

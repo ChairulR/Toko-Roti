@@ -53,7 +53,8 @@ export default function CheckoutPage() {
       const result = await createOrder(user.id, id, quantity, paymentMethod);
       if (result.success) {
         if (paymentMethod === "QRIS") {
-          setShowQRISModal(true); // tampilkan modal QR
+          
+          setShowQRISModal(true); 
         } else {
           router.push(`/order/history`);
         }

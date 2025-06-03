@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react";
 import Loading from "@/app/components/loading";
 import Link from "next/link";
-import { getUserById } from "@/app/lib/action";
-import { getOrderById } from "@/app/lib/action";
+import { getUserById } from "@/app/lib/action";;
 import { formatterCurrency } from "../lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation"; 
