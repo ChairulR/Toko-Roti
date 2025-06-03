@@ -6,6 +6,7 @@ import Loading from "@/app/components/loading"
 import { useRouter, useSearchParams } from "next/navigation"
 import { getProductById, getUserById, createOrder } from "@/app/lib/action"
 import { useSession } from "next-auth/react"
+import { orderType } from "@prisma/client"
 
 export default function CheckoutPage() {
   const router = useRouter()
@@ -15,7 +16,7 @@ export default function CheckoutPage() {
   const id = parseInt(searchParams.get("id"), 10)
   const quantity = parseInt(searchParams.get("quantity"), 10)
   const note = searchParams.get("note") || ""
-
+  const [orderType, setOrderType] = useState("PICKUP");
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [totalPrice, setTotalPrice] = useState(0)
@@ -48,9 +49,10 @@ export default function CheckoutPage() {
   }, [id, quantity, session])
 
   const handleCheckout = async () => {
+    console.log("Tombol diklik!");
     if (!user || !product) return;
     try {
-      const result = await createOrder(user.id, id, quantity, paymentMethod);
+      const result = await createOrder(user.id, id, quantity, paymentMethod, orderType);
       if (result.success) {
         if (paymentMethod === "QRIS") {
           setShowQRISModal(true); // tampilkan modal QR
@@ -122,13 +124,13 @@ export default function CheckoutPage() {
             className={`payment-btn ${paymentMethod === "QRIS" ? "selected" : ""}`}
             onClick={() => setPaymentMethod("QRIS")}
           >
-            📱 QRIS
+            QRIS
           </button>
           <button
             className={`payment-btn ${paymentMethod === "COD" ? "selected" : ""}`}
             onClick={() => setPaymentMethod("COD")}
           >
-            💵 COD (Bayar di Tempat)
+            COD (Bayar di Tempat)
           </button>
         </div>
       </section>
@@ -169,7 +171,34 @@ export default function CheckoutPage() {
             </div>
           </div>
         )}
+        <section className="payment-method mt-4">
+          <h3 className="payment-title">Pilih Metode Pemesanan</h3>
+          <div className="order-options flex gap-7">
+            <label className={`order-option flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition ${orderType === "DELIVERY" ? "border-blue-500 bg-blue-50" : "border-gray-300"}`}>
+              <input
+                type="radio"
+                name="orderType"
+                value="DELIVERY"
+                checked={orderType === "DELIVERY"}
+                onChange={(e) => setOrderType(e.target.value)}
+                className="hidden"
+              />
+              <span className="font-medium">Antar ke Rumah</span>
+            </label>
 
+            <label className={`order-option flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition ${orderType === "PICKUP" ? "border-green-500 bg-green-50" : "border-gray-300"}`}>
+              <input
+                type="radio"
+                name="orderType"
+                value="PICKUP"
+                checked={orderType === "PICKUP"}
+                onChange={(e) => setOrderType(e.target.value)}
+                className="hidden"
+              />
+              <span className="font-medium">Ambil di Toko</span>
+            </label>
+          </div>
+        </section>
       <button className="checkout-btn" onClick={handleCheckout}>
         Lanjutkan Pembayaran
       </button>
