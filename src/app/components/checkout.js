@@ -108,7 +108,7 @@ export default function CheckoutPage() {
       <div className="checkout-summary">
         <div className="flex justify-between w-full px-6 mb-2">
           <span className="text-sm text-gray-600">Harga per item</span>
-          <span className="text-sm">Rp{product.price.toLocaleString()}</span>
+          <span className="text-sm">Rp{product.price.toLocaleString("id-ID")}</span>
         </div>
         <div className="flex justify-between w-full px-6 font-semibold">
           <span>Total ({quantity} item)</span>
