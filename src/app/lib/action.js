@@ -63,6 +63,7 @@ export const register = async (formdata) => {
       data: {
         ...data,
         password: hashedPassword,
+        address: formdata.address || "",
       },
     });
 
@@ -126,6 +127,7 @@ export const getUserById = async (id) => {
         status: order.status,
         qty: order.qty,
         payment: order.payment,
+        orderType: order.orderType,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
         comments: order.comments,
@@ -405,6 +407,7 @@ export const createOrder = async (userId, productId, qty, paymentMethod) => {
         qty: qty,
         status: "PURCHASED",
         payment: paymentMethod,
+         orderType: orderType,
       },
     });
 

@@ -23,36 +23,64 @@ export default function RegisterForm() {
   const [success, setSuccess] = useState("")
   const [name, setName] = useState("")
   const [isLoading, setLoading] = useState(false)
+  const [address, setAddress] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordMatchError, setPasswordMatchError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [isValidPassword, setIsValidPassword] = useState(false);
+
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+
+    if (newPassword.length < 8) {
+      setPasswordError("Password harus minimal 8 karakter.");
+      setIsValidPassword(false);
+    } else {
+      setPasswordError("");
+      setIsValidPassword(true);
+    }
+  };
 
   const handleRegister = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
-    setSuccess("")
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
 
+    if (password !== confirmPassword) {
+      setPasswordMatchError("Password tidak sesuai! Silakan masukkan ulang dengan benar.");
+      setLoading(false);
+      return;
+    } else {
+      setPasswordMatchError("");
+    }
+
+    if (password.length < 8) {
+      setPasswordError("Password harus minimal 8 karakter.");
+      setLoading(false); 
+      return;
+    } else {
+      setPasswordError("");
+    }
     try {
-      const res = await register({ name, email, password })
+      const res = await register({ name, email, password, address });
 
       if (!res.success) {
-        if (res.errorType === "VALIDATION_ERROR") {
-          const messages = Object.values(res.message).flat().join(", ")
-          setError(messages)
-        } else {
-          setError(res.message || "Terjadi kesalahan.")
-        }
+        setError(res.message || "Terjadi kesalahan.");
       } else {
-        setSuccess(res.message || "Pendaftaran berhasil!")
+        setSuccess(res.message || "Pendaftaran berhasil!");
         setTimeout(() => {
-          window.location.href = "/"
-        }, 1500)
+          window.location.href = "/";
+        }, 1500);
       }
     } catch (err) {
-      console.error("Error client:", err)
-      setError("Terjadi kesalahan, silakan coba lagi.")
+      console.error("Error client:", err);
+      setError("Terjadi kesalahan, silakan coba lagi.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center px-6 py-12">
@@ -138,8 +166,41 @@ export default function RegisterForm() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => handlePasswordChange(e)}
                 placeholder="Input your password"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent bg-white text-gray-900 placeholder-gray-500"
+                required
+              />
+              {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
+            </div>
+
+
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                Konfirmasi Password
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm your password"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 bg-white text-gray-900 placeholder-gray-500"
+                required
+              />
+              {passwordMatchError && <p className="text-red-500 text-sm mt-1">{passwordMatchError}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
+                Alamat Rumah
+              </label>
+              <input
+                id="address"
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Enter your address"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent bg-white text-gray-900 placeholder-gray-500"
                 required
               />
