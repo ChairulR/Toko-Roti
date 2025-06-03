@@ -271,7 +271,7 @@ export const getOrderById = async (orderId, userId) => {
   try {
     const order = await prisma.order.findUnique({
       where: {
-        id: orderId,
+        id: parseInt(orderId, 10),
         userId: userId,
       },
       include: {
@@ -331,7 +331,7 @@ export const getOrderById = async (orderId, userId) => {
           id: order.user.id,
           name: order.user.name,
         },
-        comments: order.comments, // Komentar terkait order
+        comments: order.comments,
       },
     };
   } catch (error) {

@@ -29,13 +29,13 @@ export const getTrackingSteps = (currentStatus) => {
       id: 1,
       status: OrderStatus.PURCHASED,
       title: "Order Purchased",
-      subtitle: "Your order has been placed successfully",
+      subtitle: "Order placed, We're preparing your order",
     },
     {
       id: 2,
       status: OrderStatus.PROCESS,
       title: "Order Processing",
-      subtitle: "We're preparing your order",
+      subtitle: "Order prepared, Ready to Deliver",
     },
     {
       id: 3,

@@ -1,5 +1,6 @@
 "use client";
 import { OrderStatus } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 import {
   getTrackingSteps,
@@ -11,24 +12,20 @@ import {
 export default function OrderTrack({ order }) {
   const trackingSteps = getTrackingSteps(order.status);
   const isButtonDisabled = order.status !== OrderStatus.COMPLETED;
+  const router = useRouter();
 
   return (
     <div className="max-w-sm mx-auto bg-white min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.back()}>
           <svg
             className="w-5 h-5 text-gray-600"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 20l-8-8 8-8" />
           </svg>
           <h1 className="text-lg font-medium text-gray-900">Take Order</h1>
         </div>
@@ -157,7 +154,7 @@ export default function OrderTrack({ order }) {
             <p className="text-sm text-gray-500">
               {order.status === OrderStatus.COMPLETED
                 ? "Ready for pickup - Available until 6:00 PM"
-                : "Schedule Pick Up 09:00 AM"}
+                : ""}
             </p>
           </div>
         )}
