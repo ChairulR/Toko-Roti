@@ -26,7 +26,7 @@ function Card({ activePage, filteredProducts }) {
                 <img src={`/images/${item.image}`} alt={item.name} />
                 <p className="product-name">{item.name}</p>
                 <p className="price">
-                  Rp{formatterCurrency.format(item.price)}
+                {formatterCurrency.format(item.price)}
                 </p>
               </div>
             </Link>

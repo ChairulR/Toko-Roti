@@ -7,12 +7,32 @@ import { getUserById } from "@/app/lib/action";;
 import { formatterCurrency } from "../lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation"; 
-
+import { cancelOrder } from "@/app/lib/action";
 
 export default function HistoryPage({ userId }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const handleCancelOrder = async (orderId) => {
+    const confirmCancel = window.confirm("Apakah kamu yakin ingin membatalkan pesanan ini?");
+    if (!confirmCancel) return;
+
+    try {
+      const result = await cancelOrder(orderId);
+      console.log("Cancel order response:", result);
+
+      if (result.success) {
+        alert("Pesanan berhasil dibatalkan!");
+        window.location.reload();
+      } else {
+        alert("Gagal membatalkan pesanan, silakan coba lagi.");
+      }
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+      alert("Terjadi kesalahan, silakan coba lagi.");
+    }
+  };
+
 
   useEffect(() => {
     async function fetchHistory() {
@@ -118,32 +138,46 @@ export default function HistoryPage({ userId }) {
                   )}
                 </div>
 
-              ) : order.status === "COMPLETED" ? (
+              ) : order.status === "COMPLETED" || order.status === "CANCELLED"? (
                 <div className="mt-4 flex flex-wrap justify-between items-center gap-2">
                   <button
-                    onClick={() => router.push(`/product/${order.product.id}?quantity=${order.qty}`)}
+                    onClick={() => router.push(`/view/${order.product.id}?quantity=${order.qty}`)}
                     className="px-5 py-2 text-xs font-semibold text-white bg-blue-500 rounded-md shadow hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                   >
                     🔄 Beli Lagi
                   </button>
-
+                   {(order.status === "COMPLETED") && (
                   <Link
                     href={`/order/review/${order.id}`}
                     className="px-3 py-2 text-xs font-semibold text-white bg-yellow-600 rounded-md shadow hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
                   >
                     ⭐ Beri Rating
                   </Link>
+                   )}
                 </div>
               ) : (
-                <div className="mt-4 flex justify-end items-center">
+              <div className="mt-4 flex flex-wrap justify-between items-center gap-2">
+                {(order.status === "PURCHASED" || order.status === "PROCESS") && (
                   <button
-                    disabled
-                    className="px-4 py-2 text-sm font-semibold text-gray-400 bg-gray-100 rounded-md shadow cursor-not-allowed"
+                    onClick={() => router.push(`/order/track/${order.id}`)}
+                    className="px-5 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-md shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
                   >
-                    ⭐ Hanya bisa di-review saat COMPLETED
+                    📍 Lacak Pesanan
                   </button>
-                </div>
-
+                )}
+                <button
+                  onClick={() => handleCancelOrder(order.id)}
+                  className="px-5 py-2 text-xs font-semibold text-white bg-red-600 rounded-md shadow hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all"
+                >
+                  ❌ Batalkan Pesanan
+                </button>
+                {/*<button
+                  disabled
+                  className="px-4 py-2 text-sm font-semibold text-gray-400 bg-gray-100 rounded-md shadow cursor-not-allowed"
+                >
+                  ⭐ Hanya bisa di-review saat COMPLETED
+                </button>*/}
+              </div>
               )}
             </div>
           </li>

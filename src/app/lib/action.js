@@ -455,3 +455,21 @@ export const updateProfile = async ({ name, address, password }) => {
     return { success: false, message: "Gagal memperbarui profil" };
   }
 };
+
+export const cancelOrder = async (orderId) => {
+  try {
+    if (!orderId) {
+      return { success: false, message: "Order ID diperlukan" };
+    }
+
+    const order = await prisma.order.update({
+      where: { id: orderId },
+      data: { status: "CANCELLED" },
+    });
+
+    return { success: true, message: "Pesanan berhasil dibatalkan", data: order };
+  } catch (error) {
+    console.error("Error cancelling order:", error);
+    return { success: false, message: "Terjadi kesalahan saat membatalkan pesanan" };
+  }
+};
