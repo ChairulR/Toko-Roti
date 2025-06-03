@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image"; // Import next/image
 import { formatterCurrency } from "@/app/lib/utils";
 
 function Card({ activePage, filteredProducts }) {
@@ -22,12 +23,18 @@ function Card({ activePage, filteredProducts }) {
         <div className="cards">
           {filteredProducts.map((item) => (
             <Link key={item.id} href={`/view/${item.id}`}>
-              <div key={item.id} className="card">
-                <img src={`/images/${item.image}`} alt={item.name} />
+              <div className="card">
+                <Image
+                  src={`/images/${item.image}`}
+                  alt={item.name}
+                  width={200} 
+                  height={200}
+                  priority={item.id === 1} 
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABA..."
+                />
                 <p className="product-name">{item.name}</p>
-                <p className="price">
-                {formatterCurrency.format(item.price)}
-                </p>
+                <p className="price">{formatterCurrency.format(item.price)}</p>
               </div>
             </Link>
           ))}

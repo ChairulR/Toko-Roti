@@ -111,11 +111,11 @@ export default function HistoryPage({ userId }) {
                 <p className="text-justify">
                   <span className="font-medium">Metode Pembayaran:</span>{" "}
                   <span className={order.payment === "QRIS" ? "text-blue-600 font-semibold" : "text-green-600 font-semibold"}>
-                    {order.payment === "QRIS" ? "📱 QRIS" : "💵 COD"}
+                    {order.payment === "QRIS" ? "QRIS" : "COD"}
                   </span>
                   {" • "}
                   <span className={order.orderType === "DELIVERY" ? "text-purple-600 font-semibold" : "text-orange-600 font-semibold"}>
-                    {order.orderType === "DELIVERY" ? "🚚 Delivery" : "🏪 Pickup"}
+                    {order.orderType === "DELIVERY" ? "Delivery" : "Pickup"}
                   </span>
                 </p>
               </div>
@@ -144,14 +144,14 @@ export default function HistoryPage({ userId }) {
                     onClick={() => router.push(`/view/${order.product.id}?quantity=${order.qty}`)}
                     className="px-5 py-2 text-xs font-semibold text-white bg-blue-500 rounded-md shadow hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                   >
-                    🔄 Beli Lagi
+                    Beli Lagi
                   </button>
                    {(order.status === "COMPLETED") && (
                   <Link
                     href={`/order/review/${order.id}`}
                     className="px-3 py-2 text-xs font-semibold text-white bg-yellow-600 rounded-md shadow hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
                   >
-                    ⭐ Beri Rating
+                    Beri Rating
                   </Link>
                    )}
                 </div>
@@ -160,16 +160,16 @@ export default function HistoryPage({ userId }) {
                 {(order.status === "PURCHASED" || order.status === "PROCESS") && (
                   <button
                     onClick={() => router.push(`/order/track/${order.id}`)}
-                    className="px-5 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-md shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                    className="px-4.5 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-md shadow hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
                   >
-                    📍 Lacak Pesanan
+                    Detail
                   </button>
                 )}
                 <button
                   onClick={() => handleCancelOrder(order.id)}
-                  className="px-5 py-2 text-xs font-semibold text-white bg-red-600 rounded-md shadow hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all"
+                  className="px-3 py-2 text-xs font-semibold text-white bg-red-600 rounded-md shadow hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all"
                 >
-                  ❌ Batalkan Pesanan
+                  Batalkan Pesanan
                 </button>
                 {/*<button
                   disabled
