@@ -19,7 +19,7 @@ export default function ProductReviews({ comments, itemsPerPage = 3 }) {
 
   return (
     <div className="mt-6">
-      <h3 className="text-lg font-semibold mb-3 border-b pb-2">📝 Review Pengguna</h3>
+      <h3 className="text-lg font-semibold mb-3 border-b pb-2">📝 Review Pelanggan</h3>
 
       <div className="space-y-4">
         {currentComments.map((comment) => (

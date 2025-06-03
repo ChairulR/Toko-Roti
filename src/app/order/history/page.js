@@ -5,6 +5,7 @@ import React from 'react'
 
 async function page() {
   const session = await getServerSession(authOptions)
+
   return <HistoryPage userId={session.user.id}/>
 }
 

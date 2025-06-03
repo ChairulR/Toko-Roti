@@ -15,10 +15,14 @@ export async function middleware(req) {
   if (isProfilePage && !isAuthenticated) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
-  
+
   const regis = req.nextUrl.pathname.startsWith("/register");
   if (regis && isAuthenticated) {
     return NextResponse.redirect(new URL("/", req.url));
+  }
+  const order = req.nextUrl.pathname.startsWith("/order");
+  if (order && !isAuthenticated) {
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   return NextResponse.next();

@@ -2,6 +2,8 @@
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { prisma } from "./prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./auth";
 
 /**
  * This module contains server-side actions for user registration and product retrieval.
@@ -63,6 +65,7 @@ export const register = async (formdata) => {
       data: {
         ...data,
         password: hashedPassword,
+        address: formdata.address || "",
       },
     });
 
@@ -121,10 +124,13 @@ export const getUserById = async (id) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      address: user.address,
       orders: user.orders.map((order) => ({
         id: order.id,
         status: order.status,
         qty: order.qty,
+        payment: order.payment,
+        orderType: order.orderType,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
         comments: order.comments,
@@ -395,15 +401,16 @@ export const createComment = async (productId, userId, rate, orderId ,comment) =
   }
 };
 
-export const createOrder = async (userId, productId, qty, paymentMethod) => {
+export const createOrder = async (userId, productId, qty, paymentMethod, orderType) => {
   try {
     const order = await prisma.order.create({
       data: {
         userId: userId,
         productId: productId,
         qty: qty,
-        status: "PROCESS",
+        status: "PURCHASED",
         payment: paymentMethod,
+        orderType: orderType,
       },
     });
 
@@ -418,5 +425,33 @@ export const createOrder = async (userId, productId, qty, paymentMethod) => {
       success: false,
       message: "Terjadi kesalahan dalam pemesanan",
     };
+  }
+};
+
+export const updateProfile = async ({ name, address, password }) => {
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user?.id) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  const data = {
+    name,
+    address,
+  };
+
+  if (password && password.length >= 8) {
+    data.password = await bcrypt.hash(password, 10);
+  }
+
+  try {
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data,
+    });
+
+    return { success: true, message: "Profil berhasil diperbarui" };
+  } catch (err) {
+    console.error("Update profile error:", err);
+    return { success: false, message: "Gagal memperbarui profil" };
   }
 };

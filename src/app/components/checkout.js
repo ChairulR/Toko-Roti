@@ -6,6 +6,7 @@ import Loading from "@/app/components/loading"
 import { useRouter, useSearchParams } from "next/navigation"
 import { getProductById, getUserById, createOrder } from "@/app/lib/action"
 import { useSession } from "next-auth/react"
+import { orderType } from "@prisma/client"
 
 export default function CheckoutPage() {
   const router = useRouter()
@@ -15,7 +16,7 @@ export default function CheckoutPage() {
   const id = parseInt(searchParams.get("id"), 10)
   const quantity = parseInt(searchParams.get("quantity"), 10)
   const note = searchParams.get("note") || ""
-
+  const [orderType, setOrderType] = useState("PICKUP");
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [totalPrice, setTotalPrice] = useState(0)
@@ -48,12 +49,14 @@ export default function CheckoutPage() {
   }, [id, quantity, session])
 
   const handleCheckout = async () => {
+    console.log("Tombol diklik!");
     if (!user || !product) return;
     try {
-      const result = await createOrder(user.id, id, quantity, paymentMethod);
+      const result = await createOrder(user.id, id, quantity, paymentMethod, orderType);
       if (result.success) {
         if (paymentMethod === "QRIS") {
-          setShowQRISModal(true); // tampilkan modal QR
+          
+          setShowQRISModal(true); 
         } else {
           router.push(`/order/history`);
         }
@@ -87,17 +90,17 @@ export default function CheckoutPage() {
         />
         <div className="checkout-info">
           <p className="font-semibold">
-            📌 <strong>{product.name}</strong>
+            <strong>{product.name}</strong>
           </p>
           <p className="text-sm text-gray-600">
-            🍞 Rasa: <span className="highlight">{product.flavor}</span>
+            Rasa: <span className="highlight">{product.flavor}</span>
           </p>
           <p className="text-sm text-gray-600">
-            📦 Jumlah: <span className="highlight">{quantity} item</span>
+           Jumlah: <span className="highlight">{quantity} item</span>
           </p>
           {note && (
             <p className="text-sm text-gray-600">
-              📝 Catatan: <span className="highlight">{note}</span>
+              Catatan: <span className="highlight">{note}</span>
             </p>
           )}
         </div>
@@ -105,30 +108,30 @@ export default function CheckoutPage() {
 
       <div className="checkout-summary">
         <div className="flex justify-between w-full px-6 mb-2">
-          <span className="text-sm text-gray-600">💰 Harga per item</span>
-          <span className="text-sm">Rp{product.price.toLocaleString()}</span>
+          <span className="text-sm text-gray-600">Harga per item</span>
+          <span className="text-sm">Rp{product.price.toLocaleString("id-ID")}</span>
         </div>
         <div className="flex justify-between w-full px-6 font-semibold">
-          <span>💳 Total ({quantity} item)</span>
+          <span>Total ({quantity} item)</span>
           <span>Rp{totalPrice.toLocaleString()}</span>
-        </div>
+        </div>  
       </div>
 
       {/* Pilih Metode Pembayaran */}
       <section className="payment-method">
-        <h3 className="payment-title">🛍 Pilih Metode Pembayaran</h3>
+        <h3 className="payment-title">Pilih Metode Pembayaran</h3>
         <div className="payment-options">
           <button
             className={`payment-btn ${paymentMethod === "QRIS" ? "selected" : ""}`}
             onClick={() => setPaymentMethod("QRIS")}
           >
-            📱 QRIS
+            QRIS
           </button>
           <button
             className={`payment-btn ${paymentMethod === "COD" ? "selected" : ""}`}
             onClick={() => setPaymentMethod("COD")}
           >
-            💵 COD (Bayar di Tempat)
+            COD (Bayar di Tempat)
           </button>
         </div>
       </section>
@@ -155,7 +158,7 @@ export default function CheckoutPage() {
               </p>
               <button
               onClick={() => {
-                  setShowQRISModal(false);
+                  setShowQRISModal(false);  
                   router.push("/order/history");
                 }}
                 className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition"
@@ -169,7 +172,34 @@ export default function CheckoutPage() {
             </div>
           </div>
         )}
+        <section className="payment-method mt-4">
+          <h3 className="payment-title">Pilih Metode Pemesanan</h3>
+          <div className="order-options flex gap-7">
+            <label className={`order-option flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition ${orderType === "DELIVERY" ? "border-blue-500 bg-blue-50" : "border-gray-300"}`}>
+              <input
+                type="radio"
+                name="orderType"
+                value="DELIVERY"
+                checked={orderType === "DELIVERY"}
+                onChange={(e) => setOrderType(e.target.value)}
+                className="hidden"
+              />
+              <span className="font-medium">Antar ke Rumah</span>
+            </label>
 
+            <label className={`order-option flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition ${orderType === "PICKUP" ? "border-green-500 bg-green-50" : "border-gray-300"}`}>
+              <input
+                type="radio"
+                name="orderType"
+                value="PICKUP"
+                checked={orderType === "PICKUP"}
+                onChange={(e) => setOrderType(e.target.value)}
+                className="hidden"
+              />
+              <span className="font-medium">Ambil di Toko</span>
+            </label>
+          </div>
+        </section>
       <button className="checkout-btn" onClick={handleCheckout}>
         Lanjutkan Pembayaran
       </button>

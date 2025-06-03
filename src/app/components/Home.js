@@ -5,12 +5,9 @@ import { motion } from "framer-motion";
 import Search from "@/app/components/Home/Search";
 import Tab from "@/app/components/Home/Tab";
 import Banner from "@/app/components/Home/Banner";
-import ProductDetailPopup from "@/app/components/ProductDetailPopup";
 import Card from "@/app/components/Home/Card";
 
 export default function Home({ products, activeTab }) {
-  const [selectedProduct, setSelectedProduct] = useState();
-
   return (
     <div className="container-home">
       {/* Bagian Welcome */}
@@ -36,13 +33,6 @@ export default function Home({ products, activeTab }) {
 
       {/* Content */}
       <Card activePage={activeTab} filteredProducts={products} />
-
-      {selectedProduct && (
-        <ProductDetailPopup
-          productId={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
     </div>
   );
 }
