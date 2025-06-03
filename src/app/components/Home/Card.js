@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { formatterCurrency } from "@/app/lib/utils";
 
-function Card({activePage, filteredProducts}) {
+function Card({ activePage, filteredProducts }) {
   return (
     <div>
       {activePage === "history" ? (
@@ -19,15 +19,15 @@ function Card({activePage, filteredProducts}) {
           </div>
         </div>
       ) : (
-        
         <div className="cards">
           {filteredProducts.map((item) => (
-
             <Link key={item.id} href={`/view/${item.id}`}>
               <div key={item.id} className="card">
                 <img src={`/images/${item.image}`} alt={item.name} />
-                  <p className="product-name">{item.name}</p>
-                <p className="price">Rp{formatterCurrency.format(item.price)}</p>
+                <p className="product-name">{item.name}</p>
+                <p className="price">
+                  Rp{formatterCurrency.format(item.price)}
+                </p>
               </div>
             </Link>
           ))}

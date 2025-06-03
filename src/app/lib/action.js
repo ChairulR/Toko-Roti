@@ -401,7 +401,7 @@ export const createComment = async (productId, userId, rate, orderId ,comment) =
   }
 };
 
-export const createOrder = async (userId, productId, qty, paymentMethod) => {
+export const createOrder = async (userId, productId, qty, paymentMethod, orderType) => {
   try {
     const order = await prisma.order.create({
       data: {
@@ -410,7 +410,7 @@ export const createOrder = async (userId, productId, qty, paymentMethod) => {
         qty: qty,
         status: "PURCHASED",
         payment: paymentMethod,
-         orderType: orderType,
+        orderType: orderType,
       },
     });
 

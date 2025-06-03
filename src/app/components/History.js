@@ -93,6 +93,10 @@ export default function HistoryPage({ userId }) {
                   <span className={order.payment === "QRIS" ? "text-blue-600 font-semibold" : "text-green-600 font-semibold"}>
                     {order.payment === "QRIS" ? "📱 QRIS" : "💵 COD"}
                   </span>
+                  {" • "}
+                  <span className={order.orderType === "DELIVERY" ? "text-purple-600 font-semibold" : "text-orange-600 font-semibold"}>
+                    {order.orderType === "DELIVERY" ? "🚚 Delivery" : "🏪 Pickup"}
+                  </span>
                 </p>
               </div>
 
