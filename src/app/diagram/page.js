@@ -8,81 +8,103 @@ const MermaidRenderer = dynamic(() => import("@/app/components/MermaidRenderer")
 
 export default function DiagramPage() {
   const chart = `
-    classDiagram
-      class User {
-        +Int id
-        +String name
-        +String email
-        +String address
-        +Boolean isAdmin
-        +Date createdAt
-        +Date updatedAt
-      }
+classDiagram
+  %% ==== Kelas ====
+  class User {
+    +Int id
+    +String name
+    +String email
+    +String address
+    +Boolean isAdmin
+    +Date createdAt
+    +Date updatedAt
+    +register()
+    +login()
+    +editProfile()
+    +logout()
+  }
 
-      class Product {
-        +Int id
-        +String name
-        +Int price
-        +String image
-        +String flavor
-        +Int stock
-        +Date createdAt
-        +Date updatedAt
-      }
+  class Product {
+    +Int id
+    +String name
+    +Int price
+    +String image
+    +String flavor
+    +Int stock
+    +Date createdAt
+    +Date updatedAt
+    +viewDetails()
+  }
 
-      class Order {
-        +Int id
-        +Int qty
-        +OrderStatus status
-        +PaymentMethod payment
-        +OrderType orderType
-        +Date createdAt
-        +Date updatedAt
-      }
+  class Order {
+    +Int id
+    +Int qty
+    +OrderStatus status
+    +PaymentMethod payment
+    +OrderType orderType
+    +Date createdAt
+    +Date updatedAt
+    +calculateTotal()
+    +canReview()
+  }
 
-      class Comment {
-        +Int id
-        +String content
-        +Int rate
-        +Date createdAt
-        +Date updatedAt
-      }
+  class Comment {
+    +Int id
+    +String content
+    +Int rate
+    +Date createdAt
+    +Date updatedAt
+    +editReview()
+  }
 
-      class Banner {
-        +Int id
-        +String name
-        +String image
-        +Date createdAt
-        +Date updatedAt
-      }
+  class Banner {
+    +Int id
+    +String name
+    +String image
+    +Date createdAt
+    +Date updatedAt
+    +display()
+  }
 
-      class OrderStatus {
-        PURCHASED
-        PROCESS
-        COMPLETED
-        CANCELLED
-      }
+  class OrderStatus {
+    PURCHASED
+    PROCESS
+    COMPLETED
+    CANCELLED
+  }
 
-      class PaymentMethod {
-        QRIS
-        COD
-      }
+  class PaymentMethod {
+    QRIS
+    COD
+  }
 
-      class OrderType {
-        PICKUP
-        DELIVERY
-      }
+  class OrderType {
+    PICKUP
+    DELIVERY
+  }
 
-      %% RELATIONS
-      User "1" --> "many" Order : membuat
-      User "1" --> "many" Comment : menulis
-      Order "1" --> "1" Product : berisi
-      Order "1" --> "many" Comment : bisa punya
-      Product "1" --> "many" Order : dipesan
-      Product "1" --> "many" Comment : diulas
-      Comment --> User
-      Comment --> Product
-      Comment --> Order
+  %% ==== Relasi dan Penjelasan ====
+  User "1" --> "many" Order : melakukan
+  User "1" --> "many" Comment : menulis
+  User --> Banner : melihat
+
+  Product "1" --> "many" Order : dipesan
+  Product "1" --> "many" Comment : diulas
+
+  Order --> Product : berisi
+  Order --> Comment : bisa diulas
+
+  Comment --> Order : ditulis untuk
+  Comment --> Product : tentang
+  Comment --> User : oleh
+
+  %% ==== Fungsi Utama di Tiap Entitas ====
+  %% Kelas User: register, login, editProfile, logout
+  %% Kelas Order: calculateTotal, canReview
+  %% Kelas Product: viewDetails
+  %% Kelas Banner: display
+  %% Kelas Comment: editReview
+
   `;
 
   return (
